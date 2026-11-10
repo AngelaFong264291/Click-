@@ -1,0 +1,43 @@
+{
+  "rules": {
+    "rooms": {
+      "$code": {
+        ".read": "auth != null",
+        ".write": "auth != null && newData.child('host').val() === auth.uid && (!data.exists() || data.child('createdAt').val() < now - 28800000)",
+        ".validate": "$code.matches(/^[0-9]{4}$/) && newData.hasChildren(['host', 'status', 'createdAt'])",
+        "host": {
+          ".write": "auth != null && newData.exists() && data.parent().exists() && (data.val() === auth.uid || (newData.val() === auth.uid && data.parent().child('players').child(auth.uid).child('online').val() === true && (!data.exists() || !data.parent().child('players').child(data.val()).exists() || data.parent().child('players').child(data.val()).child('online').val() === false)))",
+          ".validate": "newData.isString() && newData.parent().child('players').child(newData.val()).exists()"
+        },
+        "status": {
+          ".write": "auth != null && newData.exists() && data.parent().child('host').val() === auth.uid",
+          ".validate": "newData.val() === 'lobby' || newData.val() === 'playing'"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber() && newData.val() <= now + 60000"
+        },
+        "players": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && (data.exists() || root.child('rooms').child($code).child('status').val() === 'lobby')",
+            ".validate": "newData.hasChildren(['name', 'joinedAt', 'online'])",
+            "name": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 10"
+            },
+            "joinedAt": {
+              ".validate": "newData.isNumber() && (data.exists() ? newData.val() === data.val() : newData.val() >= now - 60000 && newData.val() <= now + 60000)"
+            },
+            "online": {
+              ".validate": "newData.isBoolean()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    }
+  }
+}

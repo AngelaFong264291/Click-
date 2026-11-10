@@ -1,5 +1,19 @@
 import { describe, expect, it } from 'vitest'
+import en from './en.json'
 import { createT, detectLanguage, otherLanguage, translate } from './index.js'
+import zhHK from './zh-HK.json'
+
+function keysOf(node, prefix = '') {
+  return Object.entries(node).flatMap(([k, v]) =>
+    typeof v === 'string' ? [prefix + k] : keysOf(v, `${prefix}${k}.`),
+  )
+}
+
+describe('字串檔', () => {
+  it('zh-HK.json 同 en.json 嘅 key 一模一樣', () => {
+    expect(keysOf(en).sort()).toEqual(keysOf(zhHK).sort())
+  })
+})
 
 describe('translate / t()', () => {
   it('中文攞到中文字串', () => {

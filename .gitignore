@@ -12,6 +12,14 @@ dist
 dist-ssr
 *.local
 
+# Firebase 設定（.env.example 要 commit）
+.env
+.env.*
+!.env.example
+
+# firebase-tools 本地 cache
+.firebase/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -5,5 +5,51 @@
   "lang": {
     "toggle": "中 / EN",
     "toggleAria": "切換做英文"
+  },
+  "common": {
+    "loading": "載入緊…",
+    "backHome": "返首頁"
+  },
+  "home": {
+    "nameLabel": "你個名",
+    "namePlaceholder": "最多 {max} 個字",
+    "create": "開新房",
+    "creating": "開緊房…",
+    "or": "或者入朋友個房",
+    "codeLabel": "房號",
+    "codePlaceholder": "4 位數字",
+    "join": "入房",
+    "joining": "入緊房…"
+  },
+  "room": {
+    "joinTitle": "加入房間 {code}",
+    "code": "房號",
+    "shareLink": "分享連結",
+    "copy": "複製",
+    "copied": "複製咗！",
+    "players": "玩家（{count}/{max}）",
+    "host": "房主",
+    "you": "你",
+    "offline": "離線",
+    "start": "開始",
+    "needMore": "最少要 {min} 個人先開始到",
+    "waitingHost": "等房主開始…",
+    "leave": "離開"
+  },
+  "game": {
+    "placeholder": "遊戲喺度開始"
+  },
+  "errors": {
+    "nameRequired": "請填你個名",
+    "nameTooLong": "名字最多 {max} 個字",
+    "codeInvalid": "房號係 4 位數字",
+    "notFound": "搵唔到呢個房",
+    "full": "呢個房已經滿人（{max} 人）",
+    "started": "呢個房已經開始咗",
+    "noCode": "暫時開唔到新房，請再試一次",
+    "generic": "出咗啲問題，請再試一次",
+    "auth": "登入唔到，請檢查網絡再 refresh",
+    "configTitle": "未設定 Firebase",
+    "configBody": "請喺 .env.local 填入以下設定，然後重新開 dev server："
   }
 }

@@ -12,8 +12,10 @@
 - **前端**：React + Vite，用 **JavaScript**，唔好轉 TypeScript
 - **即時同步**：Firebase Realtime Database
 - **玩家身份**：Firebase 匿名登入
-- **部署**：GitHub Pages，repo 名係 `Click-`，`vite.config.js` 嘅 `base: '/Click-/'`（階段 1 先加）
-- **路由**：HashRouter（GitHub Pages 唔支援 SPA fallback）
+- **Firebase 設定**：config 由 `VITE_FIREBASE_*` env 讀（見 `.env.example`；本地放 `.env.local`，CI 用同名 GitHub secrets）。安全規則喺 `database.rules.json`，改完要人手貼去 Firebase Console → Realtime Database → Rules
+- **部署**：Firebase Hosting（project `doweclick`），live 網址 https://doweclick.web.app 。push 去 `main` 就由 `.github/workflows/firebase-hosting-deploy.yml` 自動 test、build、deploy 去 live channel（service account secret：`FIREBASE_SERVICE_ACCOUNT_DOWECLICK`）。`firebase.json` 只有 hosting（serve `dist/`），冇 database 設定，所以 deploy 唔會改到 console 嘅 rules。Vite `base` 用預設 `/`
+- **本地開發**：`npm run dev` → http://localhost:5173/
+- **路由**：HashRouter。首頁 `/#/`，房間 `/#/room/:code`（例如 https://doweclick.web.app/#/room/1234 ）
 - **測試**：Vitest（`npm test`）。排錯：如果見到 `Cannot read properties of undefined (reading 'config')` 而一個測試都冇跑，通常係 terminal 用咗細楷 drive letter（`c:\`），Vitest load 咗兩份自己。用大楷路徑 `cd C:\...` 再跑就得
 - **Lint**：保留 oxlint（`npm run lint`）
 - **介面語言**：自建 `t()` 加 `src/i18n/zh-HK.json`、`en.json`，唔好加大型 i18n 套件
@@ -23,7 +25,7 @@
 | 階段 | 內容 |
 |---|---|
 | 0 | 準備工作：清理 template、CLAUDE.md、i18n 基礎、folder 結構、Vitest |
-| 1 | Firebase、匿名登入、開房入房、大堂、host 移交、部署 GitHub Pages |
+| 1 | Firebase、匿名登入、開房入房、大堂、host 移交、部署 Firebase Hosting |
 | 2 | 計分邏輯 + 測試 |
 | 3 | 詞庫格式 + 題目生成 |
 | 4 | 遊戲流程：作答、倒數、揭曉 |
@@ -53,6 +55,6 @@ src/
   components/  可重用 UI 元件
   screens/     各畫面
   game/        純函數遊戲邏輯（計分、排名、題目生成）
-  firebase/    Firebase 初始化同讀寫
+  firebase/    Firebase 初始化、匿名登入、房間讀寫、presence
   data/        詞庫同題目模板 JSON
   styles/      design tokens```

@@ -19,15 +19,103 @@ body {
   padding: 16px;
 }
 
-.home {
-  display: grid;
-  place-items: center;
-  min-height: 60vh;
-  padding: 16px;
-}
-
 .lang-toggle {
   font: inherit;
   padding: 6px 12px;
   cursor: pointer;
+}
+
+/* 階段 1 嘅臨時排版，正式設計喺階段 6–7。 */
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+input,
+button {
+  font: inherit;
+  padding: 8px 12px;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.primary {
+  font-weight: 600;
+}
+
+.join-row,
+.share-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.divider,
+.hint {
+  margin: 0;
+  color: #666;
+}
+
+.error {
+  margin: 0;
+  color: #b00020;
+}
+
+.room-code {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.player-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.player-list li {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.player-list li.offline {
+  opacity: 0.5;
+}
+
+.tag {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+}
+
+.tag.muted {
+  color: #666;
 }

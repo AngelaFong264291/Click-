@@ -5,5 +5,51 @@
   "lang": {
     "toggle": "中 / EN",
     "toggleAria": "Switch to Chinese"
+  },
+  "common": {
+    "loading": "Loading…",
+    "backHome": "Back to home"
+  },
+  "home": {
+    "nameLabel": "Your name",
+    "namePlaceholder": "Up to {max} characters",
+    "create": "Create a room",
+    "creating": "Creating…",
+    "or": "Or join a friend's room",
+    "codeLabel": "Room code",
+    "codePlaceholder": "4 digits",
+    "join": "Join",
+    "joining": "Joining…"
+  },
+  "room": {
+    "joinTitle": "Join room {code}",
+    "code": "Room code",
+    "shareLink": "Share link",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "players": "Players ({count}/{max})",
+    "host": "Host",
+    "you": "You",
+    "offline": "Offline",
+    "start": "Start",
+    "needMore": "You need at least {min} players to start",
+    "waitingHost": "Waiting for the host to start…",
+    "leave": "Leave"
+  },
+  "game": {
+    "placeholder": "Game starts here"
+  },
+  "errors": {
+    "nameRequired": "Please enter your name",
+    "nameTooLong": "Names can be up to {max} characters",
+    "codeInvalid": "Room codes are 4 digits",
+    "notFound": "Couldn't find that room",
+    "full": "That room is full ({max} players)",
+    "started": "That room has already started",
+    "noCode": "Couldn't create a room right now. Please try again",
+    "generic": "Something went wrong. Please try again",
+    "auth": "Couldn't sign in. Check your connection and refresh",
+    "configTitle": "Firebase isn't set up",
+    "configBody": "Add these values to .env.local, then restart the dev server:"
   }
 }
