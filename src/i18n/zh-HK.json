@@ -1,0 +1,9 @@
+{
+  "app": {
+    "title": "夾唔夾"
+  },
+  "lang": {
+    "toggle": "中 / EN",
+    "toggleAria": "切換做英文"
+  }
+}

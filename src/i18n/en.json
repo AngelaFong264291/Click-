@@ -1,0 +1,9 @@
+{
+  "app": {
+    "title": "Do We Click?"
+  },
+  "lang": {
+    "toggle": "中 / EN",
+    "toggleAria": "Switch to Chinese"
+  }
+}
