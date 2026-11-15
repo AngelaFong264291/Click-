@@ -9,8 +9,10 @@ import {
   runTransaction,
   serverTimestamp,
   set,
+  update,
 } from 'firebase/database'
 import { generateRoomCode, isRoomStale, joinError, pickNextHost } from '../game/room.js'
+import { generateQuestions } from '../game/generateQuestions.js'
 import { db } from './app.js'
 
 const MAX_CODE_ATTEMPTS = 10
@@ -105,8 +107,9 @@ export async function leaveRoom(code, uid, room) {
   await remove(playerRef(code, uid))
 }
 
-export function startGame(code) {
-  return set(ref(db, `rooms/${code}/status`), 'playing')
+export function startGame(code, playerUids) {
+  const questions = generateQuestions(playerUids)
+  return update(roomRef(code), { questions, status: 'playing' })
 }
 
 /**

@@ -37,7 +37,9 @@
     "leave": "Leave"
   },
   "game": {
-    "placeholder": "Game starts here"
+    "placeholder": "Game starts here",
+    "options": "Options",
+    "adjectives": "Adjectives"
   },
   "errors": {
     "nameRequired": "Please enter your name",

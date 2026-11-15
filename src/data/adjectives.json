@@ -1,0 +1,9 @@
+[
+  { "id": "comforting", "zh": "治癒", "en": "comforting", "groups": ["breakfast", "drinks"] },
+  { "id": "fancy", "zh": "高級", "en": "fancy", "groups": ["breakfast", "drinks"] },
+  { "id": "bold", "zh": "大膽", "en": "bold", "groups": ["breakfast", "drinks", "outings"] },
+  { "id": "refreshing", "zh": "清爽", "en": "refreshing", "groups": ["drinks", "outings"] },
+  { "id": "relaxing", "zh": "放鬆", "en": "relaxing", "groups": ["breakfast", "drinks", "outings"] },
+  { "id": "adventurous", "zh": "刺激", "en": "adventurous", "groups": ["outings", "breakfast"] },
+  { "id": "social", "zh": "適合一班人", "en": "social", "groups": ["outings", "drinks"] }
+]

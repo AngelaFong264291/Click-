@@ -20,7 +20,7 @@ export default function LobbyScreen({ code, room, uid, onLeave }) {
     setStarting(true)
     setError(null)
     try {
-      await startGame(code)
+      await startGame(code, players.map((player) => player.uid))
     } catch {
       setError('generic')
       setStarting(false)

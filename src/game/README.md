@@ -14,12 +14,16 @@
 ```js
 {
   type: 'choice' | 'slider' | 'time' | 'matching' | 'ranking' | 'guess',
+  templateId: 'template-id', // 用過嘅模板追蹤；每局不可重複
+  text: { zh: '...', en: '...' },
   options: [...],     // choice / guess：選項；matching：左邊 3 個物件；ranking：要排嘅 4 個物件
   adjectives: [...],  // matching：右邊 3 個形容詞
   targetUid: 'uid',   // guess：被猜嘅玩家
 }
 ```
 `options` 同 `adjectives` 每項可以係 id 字串，或者 `{ id, zh, en }`，計分只讀 `id`。
+
+`generateQuestions(playerUids, random)` 係純函數，輸出十題固定次序：choice、slider、choice、matching、choice、time、choice、ranking、guess、choice。每局十個 `templateId` 唔重複；`text` 同選項/形容詞顯示文字以 `{zh, en}` 儲存。guess 嘅 `{name}` placeholder 只喺 UI 顯示時以 `targetUid` 對應玩家姓名代入，唔寫入題目。
 
 答案係 `{ [uid]: value }`，冇作答嘅玩家冇 entry：
 - choice / guess：option id

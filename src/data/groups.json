@@ -1,0 +1,32 @@
+[
+  {
+    "id": "breakfast",
+    "name": { "zh": "早餐", "en": "breakfasts" },
+    "items": [
+      { "id": "pineapple-bun", "zh": "菠蘿包", "en": "pineapple bun" },
+      { "id": "egg-tart", "zh": "蛋撻", "en": "egg tart" },
+      { "id": "toast", "zh": "多士", "en": "toast" },
+      { "id": "congee", "zh": "粥", "en": "congee" }
+    ]
+  },
+  {
+    "id": "drinks",
+    "name": { "zh": "飲品", "en": "drinks" },
+    "items": [
+      { "id": "milk-tea", "zh": "奶茶", "en": "milk tea" },
+      { "id": "lemon-tea", "zh": "檸檬茶", "en": "lemon tea" },
+      { "id": "soy-milk", "zh": "豆漿", "en": "soy milk" },
+      { "id": "coffee", "zh": "咖啡", "en": "coffee" }
+    ]
+  },
+  {
+    "id": "outings",
+    "name": { "zh": "活動", "en": "activities" },
+    "items": [
+      { "id": "beach", "zh": "去沙灘", "en": "going to the beach" },
+      { "id": "karaoke", "zh": "唱 K", "en": "karaoke" },
+      { "id": "museum", "zh": "逛博物館", "en": "visiting a museum" },
+      { "id": "hiking", "zh": "行山", "en": "hiking" }
+    ]
+  }
+]

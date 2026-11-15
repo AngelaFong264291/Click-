@@ -42,7 +42,7 @@ function Room({ code }) {
     }
   }
 
-  if (room.status === 'playing') return <PlayingPlaceholder />
+  if (room.status === 'playing') return <PlayingPlaceholder room={room} />
   return <LobbyScreen code={code} room={room} uid={uid} onLeave={handleLeave} />
 }
 

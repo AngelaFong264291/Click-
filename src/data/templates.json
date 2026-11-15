@@ -1,0 +1,12 @@
+[
+  { "id": "choice-a", "type": "choice", "text": { "zh": "邊款{item}最似你？", "en": "Which {item} feels most like you?" } },
+  { "id": "choice-b", "type": "choice", "text": { "zh": "今日你會揀邊款{item}？", "en": "Which {item} would you pick today?" } },
+  { "id": "choice-c", "type": "choice", "text": { "zh": "邊款{item}最啱你？", "en": "Which {item} suits you best?" } },
+  { "id": "choice-d", "type": "choice", "text": { "zh": "你最想要邊款{item}？", "en": "Which {item} would you want most?" } },
+  { "id": "choice-e", "type": "choice", "text": { "zh": "如果而家要揀，你會揀邊款{item}？", "en": "If you had to choose now, which {item} would you pick?" } },
+  { "id": "slider-a", "type": "slider", "text": { "zh": "{item}有幾{adj}？", "en": "How {adj} is {item}?" } },
+  { "id": "matching-a", "type": "matching", "text": { "zh": "將以下{item}配對到最適合嘅形容詞。", "en": "Match these {item} with the adjectives that fit them best." } },
+  { "id": "time-a", "type": "time", "text": { "zh": "你幾點會{item}？", "en": "What time would you {item}?" } },
+  { "id": "ranking-a", "type": "ranking", "text": { "zh": "由最到最唔{adj}，排好以下{item}。", "en": "Rank these {item} from most to least {adj}." } },
+  { "id": "guess-a", "type": "guess", "text": { "zh": "你估{name}會揀邊款{item}？", "en": "Which {item} do you think {name} would choose?" } }
+]

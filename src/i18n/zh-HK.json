@@ -37,7 +37,9 @@
     "leave": "離開"
   },
   "game": {
-    "placeholder": "遊戲喺度開始"
+    "placeholder": "遊戲喺度開始",
+    "options": "選項",
+    "adjectives": "形容詞"
   },
   "errors": {
     "nameRequired": "請填你個名",

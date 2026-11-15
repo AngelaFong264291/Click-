@@ -13,6 +13,10 @@
           ".write": "auth != null && newData.exists() && data.parent().child('host').val() === auth.uid",
           ".validate": "newData.val() === 'lobby' || newData.val() === 'playing'"
         },
+        "questions": {
+          ".write": "auth != null && !data.exists() && data.parent().child('status').val() === 'lobby' && data.parent().child('host').val() === auth.uid",
+          ".validate": "newData.numChildren() === 10"
+        },
         "createdAt": {
           ".validate": "newData.isNumber() && newData.val() <= now + 60000"
         },
