@@ -5,6 +5,7 @@ import {
   canStart,
   generateRoomCode,
   hostIsGone,
+  isMember,
   isRoomStale,
   isValidRoomCode,
   joinError,
@@ -120,6 +121,15 @@ describe('host 移交', () => {
     }
     expect(pickNextHost(players, 'x')).toBe('b')
     expect(pickNextHost(players, 'b')).toBe('c')
+  })
+
+  it('唔會將 host 交俾已離開嘅在線玩家', () => {
+    const players = {
+      left: { joinedAt: 1, online: true, left: true },
+      next: { joinedAt: 2, online: true, left: false },
+    }
+    expect(pickNextHost(players, 'host')).toBe('next')
+    expect(isMember({ players }, 'left')).toBe(false)
   })
 
   it('冇人在線就返回 null', () => {

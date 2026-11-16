@@ -6,16 +6,39 @@
         ".write": "auth != null && newData.child('host').val() === auth.uid && (!data.exists() || data.child('createdAt').val() < now - 28800000)",
         ".validate": "$code.matches(/^[0-9]{4}$/) && newData.hasChildren(['host', 'status', 'createdAt'])",
         "host": {
-          ".write": "auth != null && newData.exists() && data.parent().exists() && (data.val() === auth.uid || (newData.val() === auth.uid && data.parent().child('players').child(auth.uid).child('online').val() === true && (!data.exists() || !data.parent().child('players').child(data.val()).exists() || data.parent().child('players').child(data.val()).child('online').val() === false)))",
-          ".validate": "newData.isString() && newData.parent().child('players').child(newData.val()).exists()"
+          ".write": "auth != null && newData.exists() && data.parent().exists() && (data.val() === auth.uid || (newData.val() === auth.uid && data.parent().child('players').child(auth.uid).child('online').val() === true && data.parent().child('players').child(auth.uid).child('left').val() !== true && (!data.exists() || !data.parent().child('players').child(data.val()).exists() || data.parent().child('players').child(data.val()).child('online').val() === false || data.parent().child('players').child(data.val()).child('left').val() === true)))",
+          ".validate": "newData.isString() && newData.parent().child('players').child(newData.val()).exists() && newData.parent().child('players').child(newData.val()).child('online').val() === true && newData.parent().child('players').child(newData.val()).child('left').val() !== true"
         },
         "status": {
           ".write": "auth != null && newData.exists() && data.parent().child('host').val() === auth.uid",
-          ".validate": "newData.val() === 'lobby' || newData.val() === 'playing'"
+          ".validate": "newData.val() === 'lobby' || newData.val() === 'playing' || newData.val() === 'finished'"
         },
         "questions": {
           ".write": "auth != null && !data.exists() && data.parent().child('status').val() === 'lobby' && data.parent().child('host').val() === auth.uid",
           ".validate": "newData.numChildren() === 10"
+        },
+        "current": {
+          ".write": "auth != null && data.parent().child('host').val() === auth.uid && (data.parent().child('status').val() === 'playing' || (data.parent().child('status').val() === 'lobby' && !data.exists()))",
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 9 && newData.val() % 1 === 0"
+        },
+        "phase": {
+          ".write": "auth != null && data.parent().child('host').val() === auth.uid && (data.parent().child('status').val() === 'playing' || (data.parent().child('status').val() === 'lobby' && !data.exists()))",
+          ".validate": "newData.val() === 'answering' || newData.val() === 'reveal'"
+        },
+        "deadline": {
+          ".write": "auth != null && data.parent().child('host').val() === auth.uid && (data.parent().child('status').val() === 'playing' || (data.parent().child('status').val() === 'lobby' && !data.exists()))",
+          ".validate": "newData.isNumber()"
+        },
+        "answers": {
+          "$questionIndex": {
+            "$uid": {
+              ".write": "auth != null && auth.uid === $uid && !data.exists() && $questionIndex.matches(/^(0|[1-9][0-9]*)$/) && root.child('rooms').child($code).child('status').val() === 'playing' && root.child('rooms').child($code).child('phase').val() === 'answering' && root.child('rooms').child($code).child('current').val() === $questionIndex * 1 && now <= root.child('rooms').child($code).child('deadline').val() + 2000",
+              ".validate": "newData.hasChildren(['value', 'ms']) && newData.numChildren() === 2 && newData.child('ms').isNumber() && newData.child('ms').val() >= 0",
+              "$other": {
+                ".validate": false
+              }
+            }
+          }
         },
         "createdAt": {
           ".validate": "newData.isNumber() && newData.val() <= now + 60000"
@@ -23,7 +46,7 @@
         "players": {
           "$uid": {
             ".write": "auth != null && auth.uid === $uid && (data.exists() || root.child('rooms').child($code).child('status').val() === 'lobby')",
-            ".validate": "newData.hasChildren(['name', 'joinedAt', 'online'])",
+            ".validate": "newData.hasChildren(['name', 'joinedAt', 'online']) && (!data.child('left').val() || newData.child('left').val() === true)",
             "name": {
               ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 10"
             },
@@ -32,6 +55,9 @@
             },
             "online": {
               ".validate": "newData.isBoolean()"
+            },
+            "left": {
+              ".validate": "newData.isBoolean() && newData.val() === true"
             },
             "$other": {
               ".validate": false

@@ -12,6 +12,7 @@ import {
   update,
 } from 'firebase/database'
 import { generateRoomCode, isRoomStale, joinError, pickNextHost } from '../game/room.js'
+import { nextQuestionState, questionDeadline } from '../game/flow.js'
 import { generateQuestions } from '../game/generateQuestions.js'
 import { db } from './app.js'
 
@@ -40,6 +41,12 @@ function serverNow() {
       serverTimeOffset = snap.val() ?? 0
     })
   }
+  return Date.now() + serverTimeOffset
+}
+
+async function accurateServerNow() {
+  const snapshot = await get(ref(db, '.info/serverTimeOffset'))
+  serverTimeOffset = snapshot.val() ?? serverTimeOffset
   return Date.now() + serverTimeOffset
 }
 
@@ -100,6 +107,14 @@ export async function joinRoom(code, uid, name) {
 /** 離開：取消 onDisconnect，host 先交俾最早加入而又在線嘅人，再刪走自己。 */
 export async function leaveRoom(code, uid, room) {
   await onDisconnect(onlineRef(code, uid)).cancel()
+  if (room?.status !== 'lobby') {
+    if (room?.host === uid && room.status === 'playing') {
+      const next = pickNextHost(room.players, uid)
+      if (next) await set(ref(db, `rooms/${code}/host`), next)
+    }
+    await update(playerRef(code, uid), { left: true, online: false })
+    return
+  }
   if (room?.host === uid) {
     const next = pickNextHost(room.players, uid)
     if (next) await set(ref(db, `rooms/${code}/host`), next)
@@ -107,9 +122,34 @@ export async function leaveRoom(code, uid, room) {
   await remove(playerRef(code, uid))
 }
 
-export function startGame(code, playerUids) {
+export async function startGame(code, playerUids) {
   const questions = generateQuestions(playerUids)
-  return update(roomRef(code), { questions, status: 'playing' })
+  const now = await accurateServerNow()
+  return update(roomRef(code), {
+    questions,
+    status: 'playing',
+    current: 0,
+    phase: 'answering',
+    deadline: questionDeadline(now, questions[0].type),
+  })
+}
+
+export function submitAnswer(code, questionIndex, uid, value, ms) {
+  return set(ref(db, `rooms/${code}/answers/${questionIndex}/${uid}`), { value, ms })
+}
+
+export function revealQuestion(code) {
+  return update(roomRef(code), { phase: 'reveal' })
+}
+
+export async function advanceQuestion(code, current, nextQuestionType) {
+  const next = nextQuestionState(current)
+  if (next.status === 'finished') return update(roomRef(code), next)
+  const now = await accurateServerNow()
+  return update(roomRef(code), {
+    ...next,
+    deadline: questionDeadline(now, nextQuestionType),
+  })
 }
 
 /**

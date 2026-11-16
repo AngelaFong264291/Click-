@@ -9,6 +9,7 @@
 - `scoring.js`：`scoreQuestion`（每題分數同共識答案）、`scorePair`、`averagePairScore`
 - `midgame.js`：`isMatch`（心靈相通）、`findSoleOutlier`（唯一異類）、`isUnanimous`（全場一致）、`thermometer`
 - `overall.js`：`overallScore`、`groupTitle`
+- `flow.js`：題目時限、在線玩家完成判斷、逾時揭曉、自動提交規則、下一題狀態
 
 ## 計分用嘅題目格式（階段 3 生成題目要跟）
 ```js
@@ -32,6 +33,12 @@
 - ranking：4 個 item id，由最高排到最低
 
 格式唔啱嘅答案當冇作答。
+
+## 階段 4A 房間流程
+
+遊戲房間用 `current`（0–9）、`phase`（`answering` / `reveal`）同伺服器時間 `deadline` 同步所有玩家。一般題限時 10 秒，配對題 15 秒；答案允許至 deadline 後 2 秒寫入。玩家答案寫喺 `answers/{current}/{uid}`，格式 `{ value, ms }`，每人每題只寫一次。`ms` 係該玩家裝置按 Firebase server time offset 計算嘅作答時間。
+
+`flow.js` 保持純函數，定義在線且未離開玩家嘅完成條件、逾時揭曉、自動提交及第十題後完局。遊戲中離開會保留 player entry 同之前答案，並設 `left: true`、`online: false`；交接 host 時只會揀在線且未離開玩家。
 
 ## 計分決定
 - 作答少過 2 人：`score` 係 `null`，唔計入溫度計同總分

@@ -119,3 +119,73 @@ button:disabled {
 .tag.muted {
   color: #666;
 }
+
+.game-screen {
+  max-width: 560px;
+}
+
+.game-header,
+.question-options,
+.matching-columns,
+.ranking-list,
+.answer-list,
+.time-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.game-header {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.game-header p,
+.answer-list,
+.ranking-list {
+  margin: 0;
+}
+
+.question-options {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+}
+
+.time-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.time-grid button {
+  min-width: 0;
+  padding-inline: 4px;
+}
+
+.matching-columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ranking-list li,
+.answer-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.answer-list li span {
+  overflow-wrap: anywhere;
+}
+
+.ranking-list li span {
+  flex: 1;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

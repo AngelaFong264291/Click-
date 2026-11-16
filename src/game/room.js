@@ -52,7 +52,7 @@ export function playerCount(room) {
 }
 
 export function isMember(room, uid) {
-  return Boolean(uid && room?.players?.[uid])
+  return Boolean(uid && room?.players?.[uid] && room.players[uid].left !== true)
 }
 
 /**
@@ -69,7 +69,9 @@ export function joinError(room, uid, now) {
 
 /** 最早加入而又在線嘅玩家（唔計 excludeUid），冇就返回 null。 */
 export function pickNextHost(players, excludeUid) {
-  const next = sortedPlayers(players).find((p) => p.online === true && p.uid !== excludeUid)
+  const next = sortedPlayers(players).find(
+    (p) => p.online === true && p.left !== true && p.uid !== excludeUid,
+  )
   return next ? next.uid : null
 }
 
