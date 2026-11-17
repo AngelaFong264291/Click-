@@ -45,8 +45,25 @@ function serverNow() {
 }
 
 async function accurateServerNow() {
-  const snapshot = await get(ref(db, '.info/serverTimeOffset'))
-  serverTimeOffset = snapshot.val() ?? serverTimeOffset
+  serverTimeOffset = await new Promise((resolve, reject) => {
+    let unsubscribe = () => {}
+    unsubscribe = onValue(
+      ref(db, '.info/serverTimeOffset'),
+      (snapshot) => {
+        const offset = snapshot.val()
+        unsubscribe()
+        if (!Number.isFinite(offset)) {
+          reject(new Error('Firebase returned an invalid server time offset.'))
+          return
+        }
+        resolve(offset)
+      },
+      (error) => {
+        unsubscribe()
+        reject(error)
+      },
+    )
+  })
   return Date.now() + serverTimeOffset
 }
 
@@ -123,15 +140,26 @@ export async function leaveRoom(code, uid, room) {
 }
 
 export async function startGame(code, playerUids) {
-  const questions = generateQuestions(playerUids)
-  const now = await accurateServerNow()
-  return update(roomRef(code), {
-    questions,
-    status: 'playing',
-    current: 0,
-    phase: 'answering',
-    deadline: questionDeadline(now, questions[0].type),
-  })
+  let stage = 'generate questions'
+  try {
+    const questions = generateQuestions(playerUids)
+    stage = 'read server time offset'
+    const now = await accurateServerNow()
+    stage = 'write questions and initial room state'
+    await update(roomRef(code), {
+      questions,
+      status: 'playing',
+      current: 0,
+      phase: 'answering',
+      deadline: questionDeadline(now, questions[0].type),
+    })
+  } catch (error) {
+    console.error(`[startGame] Failed to ${stage}`, {
+      code: error?.code ?? error?.name,
+      error,
+    })
+    throw error
+  }
 }
 
 export function submitAnswer(code, questionIndex, uid, value, ms) {

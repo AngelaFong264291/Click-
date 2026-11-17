@@ -54,7 +54,11 @@ export default function GameScreen({ code, room, uid, onLeave }) {
     const attempt = `${room.current}:${room.deadline}`
     if (revealAttempt.current === attempt) return
     revealAttempt.current = attempt
-    revealQuestion(code).catch(() => {
+    revealQuestion(code).catch((error) => {
+      console.error('[GameScreen] Failed to reveal question', {
+        code: error?.code ?? error?.name,
+        error,
+      })
       revealAttempt.current = null
       setError('generic')
     })
@@ -73,7 +77,11 @@ export default function GameScreen({ code, room, uid, onLeave }) {
     setError(null)
     try {
       await advanceQuestion(code, room.current, room.questions[room.current + 1]?.type)
-    } catch {
+    } catch (error) {
+      console.error('[GameScreen] Failed to advance question', {
+        code: error?.code ?? error?.name,
+        error,
+      })
       setError('generic')
       setAdvancing(false)
     }
@@ -179,7 +187,11 @@ function AnsweringPanel({ code, room, question, answers, serverNow, uid, languag
     const ms = Math.max(0, Math.round(serverNow - (room.deadline - duration)))
     try {
       await submitAnswer(code, room.current, uid, value, ms)
-    } catch {
+    } catch (error) {
+      console.error('[GameScreen] Failed to submit answer', {
+        code: error?.code ?? error?.name,
+        error,
+      })
       submittedRef.current = false
       setLocalSubmitted(false)
       setSubmitError(true)

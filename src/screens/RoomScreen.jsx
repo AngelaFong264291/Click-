@@ -72,6 +72,11 @@ function JoinForm({ code, uid }) {
       saveName(cleanName)
       // 成功之後 useRoom 會見到自己喺房入面，自動轉去大堂
     } catch (e) {
+      console.error('[RoomScreen] Failed to join room', {
+        code: e?.cause?.code ?? e?.code ?? e?.name,
+        error: e,
+        cause: e?.cause,
+      })
       setError(e instanceof RoomError ? e.code : 'generic')
       setBusy(false)
     }

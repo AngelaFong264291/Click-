@@ -15,7 +15,20 @@
         },
         "questions": {
           ".write": "auth != null && !data.exists() && data.parent().child('status').val() === 'lobby' && data.parent().child('host').val() === auth.uid",
-          ".validate": "newData.numChildren() === 10"
+          ".validate": "newData.hasChildren(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])",
+          "0": { ".validate": "newData.exists()" },
+          "1": { ".validate": "newData.exists()" },
+          "2": { ".validate": "newData.exists()" },
+          "3": { ".validate": "newData.exists()" },
+          "4": { ".validate": "newData.exists()" },
+          "5": { ".validate": "newData.exists()" },
+          "6": { ".validate": "newData.exists()" },
+          "7": { ".validate": "newData.exists()" },
+          "8": { ".validate": "newData.exists()" },
+          "9": { ".validate": "newData.exists()" },
+          "$other": {
+            ".validate": false
+          }
         },
         "current": {
           ".write": "auth != null && data.parent().child('host').val() === auth.uid && (data.parent().child('status').val() === 'playing' || (data.parent().child('status').val() === 'lobby' && !data.exists()))",
@@ -32,8 +45,12 @@
         "answers": {
           "$questionIndex": {
             "$uid": {
-              ".write": "auth != null && auth.uid === $uid && !data.exists() && $questionIndex.matches(/^(0|[1-9][0-9]*)$/) && root.child('rooms').child($code).child('status').val() === 'playing' && root.child('rooms').child($code).child('phase').val() === 'answering' && root.child('rooms').child($code).child('current').val() === $questionIndex * 1 && now <= root.child('rooms').child($code).child('deadline').val() + 2000",
-              ".validate": "newData.hasChildren(['value', 'ms']) && newData.numChildren() === 2 && newData.child('ms').isNumber() && newData.child('ms').val() >= 0",
+              ".write": "auth != null && auth.uid === $uid && !data.exists() && $questionIndex.matches(/^(0|[1-9])$/) && root.child('rooms').child($code).child('status').val() === 'playing' && root.child('rooms').child($code).child('phase').val() === 'answering' && ((root.child('rooms').child($code).child('current').val() === 0 && $questionIndex === '0') || (root.child('rooms').child($code).child('current').val() === 1 && $questionIndex === '1') || (root.child('rooms').child($code).child('current').val() === 2 && $questionIndex === '2') || (root.child('rooms').child($code).child('current').val() === 3 && $questionIndex === '3') || (root.child('rooms').child($code).child('current').val() === 4 && $questionIndex === '4') || (root.child('rooms').child($code).child('current').val() === 5 && $questionIndex === '5') || (root.child('rooms').child($code).child('current').val() === 6 && $questionIndex === '6') || (root.child('rooms').child($code).child('current').val() === 7 && $questionIndex === '7') || (root.child('rooms').child($code).child('current').val() === 8 && $questionIndex === '8') || (root.child('rooms').child($code).child('current').val() === 9 && $questionIndex === '9')) && now <= root.child('rooms').child($code).child('deadline').val() + 2000",
+              ".validate": "newData.hasChildren(['value', 'ms']) && newData.child('ms').isNumber() && newData.child('ms').val() >= 0",
+              "value": {
+                ".validate": "((root.child('rooms').child($code).child('questions').child($questionIndex).child('type').val() === 'choice' || root.child('rooms').child($code).child('questions').child($questionIndex).child('type').val() === 'guess') && newData.isString() && (root.child('rooms').child($code).child('questions').child($questionIndex).child('options').child('0').child('id').val() === newData.val() || root.child('rooms').child($code).child('questions').child($questionIndex).child('options').child('1').child('id').val() === newData.val() || root.child('rooms').child($code).child('questions').child($questionIndex).child('options').child('2').child('id').val() === newData.val() || root.child('rooms').child($code).child('questions').child($questionIndex).child('options').child('3').child('id').val() === newData.val())) || (root.child('rooms').child($code).child('questions').child($questionIndex).child('type').val() === 'slider' && newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 10) || (root.child('rooms').child($code).child('questions').child($questionIndex).child('type').val() === 'time' && newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() < 24) || (root.child('rooms').child($code).child('questions').child($questionIndex).child('type').val() === 'matching' && newData.hasChildren()) || (root.child('rooms').child($code).child('questions').child($questionIndex).child('type').val() === 'ranking' && newData.hasChildren(['0', '1', '2', '3']))"
+              },
+              "ms": { ".validate": "newData.isNumber() && newData.val() >= 0" },
               "$other": {
                 ".validate": false
               }
@@ -46,7 +63,7 @@
         "players": {
           "$uid": {
             ".write": "auth != null && auth.uid === $uid && (data.exists() || root.child('rooms').child($code).child('status').val() === 'lobby')",
-            ".validate": "newData.hasChildren(['name', 'joinedAt', 'online']) && (!data.child('left').val() || newData.child('left').val() === true)",
+            ".validate": "newData.hasChildren(['name', 'joinedAt', 'online']) && (data.child('left').val() !== true || newData.child('left').val() === true)",
             "name": {
               ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 10"
             },

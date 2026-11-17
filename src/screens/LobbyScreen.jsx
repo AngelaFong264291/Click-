@@ -21,7 +21,11 @@ export default function LobbyScreen({ code, room, uid, onLeave }) {
     setError(null)
     try {
       await startGame(code, players.map((player) => player.uid))
-    } catch {
+    } catch (error) {
+      console.error('[LobbyScreen] Start failed', {
+        code: error?.code ?? error?.name,
+        error,
+      })
       setError('generic')
       setStarting(false)
     }

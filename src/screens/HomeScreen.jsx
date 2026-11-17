@@ -29,6 +29,11 @@ export default function HomeScreen() {
     try {
       await action()
     } catch (e) {
+      console.error(`[HomeScreen] Failed to ${kind} room`, {
+        code: e?.cause?.code ?? e?.code ?? e?.name,
+        error: e,
+        cause: e?.cause,
+      })
       setError(e instanceof RoomError ? e.code : 'generic')
       setBusy(null)
     }
