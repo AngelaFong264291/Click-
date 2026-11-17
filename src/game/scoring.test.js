@@ -191,11 +191,11 @@ describe('共識打和', () => {
     expect(r.score).toBe(50)
   })
 
-  it('中間值可以贏過兩邊：3、3、6、6 → 共識 4（220 分高過 200）', () => {
+  it('2 比 2 一樣會打和（唔會揀一個冇人揀過嘅中間值）：3、3、6、6 → 共識 3', () => {
     const r = scoreQuestion(slider, byPlayer([3, 3, 6, 6]))
-    expect(r.consensuses).toEqual([4, 5])
-    expect(r.consensus).toBe(4)
-    expect(r.score).toBe(55)
+    expect(r.consensuses).toEqual([3, 6])
+    expect(r.consensus).toBe(3)
+    expect(r.score).toBe(50)
   })
 
   it('冇打和時 consensuses 得一個', () => {
@@ -203,12 +203,50 @@ describe('共識打和', () => {
   })
 })
 
-describe('consensusCandidates', () => {
-  it('配對題 6 種配法、排序題 24 種次序', () => {
-    expect(consensusCandidates(matching)).toHaveLength(6)
-    expect(consensusCandidates(ranking)).toHaveLength(24)
-    expect(consensusCandidates(slider)).toHaveLength(11)
-    expect(consensusCandidates(time)).toHaveLength(24)
+describe('consensusCandidates：候選一定嚟自實際提交嘅答案', () => {
+  it('選項題：按選項定義次序，剔走冇人揀嘅選項', () => {
+    expect(consensusCandidates(choice, ['B', 'B', 'D'])).toEqual(['B', 'D'])
+  })
+
+  it('拉桿／時間題：剔走重複，由細到大排序', () => {
+    expect(consensusCandidates(slider, [7, 3, 7])).toEqual([3, 7])
+    expect(consensusCandidates(time, [22, 18])).toEqual([18, 22])
+  })
+
+  it('配對／排序題：用結構相等剔走重複，按提交次序', () => {
+    expect(consensusCandidates(matching, [SAME, ALL_DIFFERENT, SAME])).toEqual([SAME, ALL_DIFFERENT])
+    const a = ['p', 'q', 'r', 's']
+    const b = ['s', 'r', 'q', 'p']
+    expect(consensusCandidates(ranking, [a, b, a])).toEqual([a, b])
+  })
+})
+
+describe('共識一定係玩家實際揀過嘅答案（唔會揀冇人揀過嘅妥協答案）', () => {
+  it('拉桿題：3 人分散答 2、5、8 → 0 分（唔好揀冇人揀嘅 3）', () => {
+    const r = scoreQuestion(slider, byPlayer([2, 5, 8]))
+    expect(r.score).toBe(0)
+    expect(r.consensus).toBe(null)
+    expect(r.playerScores).toEqual({ u0: 0, u1: 0, u2: 0 })
+  })
+
+  it('拉桿題打和：3 同 7 相差太遠 → 0', () => {
+    expect(scoreQuestion(slider, byPlayer([3, 7])).score).toBe(0)
+  })
+
+  it('時間題打和：18 同 22 相差太遠 → 0', () => {
+    expect(scoreQuestion(time, byPlayer([18, 22])).score).toBe(0)
+  })
+
+  it('排序題：兩個次序 6 組中只有 2 組先後一樣 → 0', () => {
+    // p-q, p-r, p-s, q-r, q-s, r-s 入面只有 p-q、r-s 兩組先後一樣
+    const a = ['p', 'q', 'r', 's']
+    const b = ['r', 's', 'p', 'q']
+    expect(scoreQuestion(ranking, byPlayer([a, b])).score).toBe(0)
+  })
+
+  it('配對題：完全唔同嘅配法 → 0', () => {
+    const other = { bun: 'healing', mtr: 'romantic', typhoon: 'dangerous' }
+    expect(scoreQuestion(matching, byPlayer([SAME, other])).score).toBe(0)
   })
 })
 

@@ -1,11 +1,8 @@
 // 每題分數、兩人對分。規則見 docs/proposal-v3.pdf「題型與計分」。
 import {
-  HOURS,
-  SLIDER_MAX,
-  SLIDER_MIN,
+  answersEqual,
   idsOf,
   normalizeAnswer,
-  permutations,
   pointScale,
   roundedAverage,
   similarity,
@@ -13,27 +10,32 @@ import {
   validAnswers,
 } from './compare.js'
 
-function range(from, to) {
-  return Array.from({ length: to - from + 1 }, (_, i) => from + i)
+function dedupeByEquality(question, values) {
+  const unique = []
+  for (const value of values) {
+    if (!unique.some((existing) => answersEqual(question, existing, value))) unique.push(value)
+  }
+  return unique
 }
 
-/** 共識答案嘅候選，次序固定（打和時揀第一個）。 */
-export function consensusCandidates(question) {
+/**
+ * 共識答案嘅候選：一定係玩家實際提交過嘅答案之一，次序固定（打和時揀第一個）。
+ * - choice：按選項定義次序
+ * - slider / time：由細到大
+ * - matching / ranking：按玩家提交次序
+ */
+export function consensusCandidates(question, submittedValues = []) {
   switch (question.type) {
-    case 'choice':
-      return idsOf(question.options)
-    case 'slider':
-      return range(SLIDER_MIN, SLIDER_MAX)
-    case 'time':
-      return range(0, HOURS - 1)
-    case 'matching': {
-      const items = idsOf(question.options)
-      return permutations(idsOf(question.adjectives)).map((adjs) =>
-        Object.fromEntries(items.map((item, i) => [item, adjs[i]])),
-      )
+    case 'choice': {
+      const submitted = new Set(submittedValues)
+      return idsOf(question.options).filter((id) => submitted.has(id))
     }
+    case 'slider':
+    case 'time':
+      return [...new Set(submittedValues)].sort((a, b) => a - b)
+    case 'matching':
     case 'ranking':
-      return permutations(idsOf(question.options))
+      return dedupeByEquality(question, submittedValues)
     default:
       return []
   }
@@ -59,7 +61,7 @@ export function scoreQuestion(question, answers) {
 
   let bestTotal = -1
   let best = []
-  for (const candidate of consensusCandidates(question)) {
+  for (const candidate of consensusCandidates(question, valid.map(([, value]) => value))) {
     const total = valid.reduce((sum, [, value]) => sum + similarityPoints(question, candidate, value), 0)
     if (total > bestTotal) {
       bestTotal = total

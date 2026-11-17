@@ -45,7 +45,8 @@
 
 ## 計分決定
 - 作答少過 2 人：`score` 係 `null`，唔計入溫度計同總分
+- 共識答案一定係玩家實際提交過嘅答案之一，唔會揀一個冇人揀過嘅「妥協」答案
 - 最多一個人有分：0 分，`consensus` 係 `null`
-- 共識打和：`consensus` 用候選次序第一個（選項次序、最細數值、排列次序），`consensuses` 列晒所有並列答案；主流代表答中任何一個都計
+- 共識打和：`consensus` 用候選次序第一個（選項題：選項定義次序；拉桿／時間：提交咗嘅數值入面最細嗰個；配對／排序：提交次序），`consensuses` 列晒所有並列答案；主流代表答中任何一個都計
 - 猜朋友題：冇共識；目標冇作答或者冇人猜 → `null`；唔用「最多一個人有分 → 0」
 - `playerScores` 同 `scorePair` 保留原數（配對題可能係 33.33…）；`score`、`averagePairScore`、`thermometer`、`overallScore` 用 `Math.round`
