@@ -39,3 +39,54 @@ export function isUnanimous(question, answers) {
 export function thermometer(scores) {
   return roundedAverage(scores)
 }
+
+/**
+ * 一對玩家揭曉到 uptoIndex（含）為止嘅連續吻合題數。
+ * 任何一方冇作答（或格式唔啱）嘅題目當冇發生，唔加唔清零；兩人都有作答但唔吻合先清零。
+ */
+export function matchStreak(questions, answersByQuestion, uidA, uidB, uptoIndex) {
+  let streak = 0
+  for (let i = 0; i <= uptoIndex; i++) {
+    const question = questions[i]
+    const valid = new Map(validAnswers(question, answersByQuestion[i]))
+    if (!valid.has(uidA) || !valid.has(uidB)) continue
+    streak = isMatch(question, valid.get(uidA), valid.get(uidB)) ? streak + 1 : 0
+  }
+  return streak
+}
+
+/**
+ * 一個玩家揭曉到 uptoIndex（含）為止，連續成為唯一異類嘅題數。
+ * 作答少過 3 人嘅題目當冇發生；有足夠人作答但冇異類（或異類係第二人）先清零。
+ */
+export function soleOutlierStreak(questions, answersByQuestion, uid, uptoIndex) {
+  let streak = 0
+  for (let i = 0; i <= uptoIndex; i++) {
+    const question = questions[i]
+    const answers = answersByQuestion[i] ?? {}
+    if (validAnswers(question, answers).length < 3) continue
+    streak = findSoleOutlier(question, answers) === uid ? streak + 1 : 0
+  }
+  return streak
+}
+
+/**
+ * 揭曉第 currentIndex 題後嘅中途事件：
+ * - mindMeld：連續吻合次數為 3 嘅倍數嘅配對（每次去到 3 的倍數都再彈一次）
+ * - outliers：連續做唯一異類 ≥2 次嘅玩家（揭曉頁用嚟喺名之後加 🤡，跟返呢個快照）
+ * - fireworks：呢題全場一致
+ */
+export function revealEvents(questions, answersByQuestion, uids, currentIndex) {
+  const mindMeld = []
+  for (let i = 0; i < uids.length; i++) {
+    for (let j = i + 1; j < uids.length; j++) {
+      const streak = matchStreak(questions, answersByQuestion, uids[i], uids[j], currentIndex)
+      if (streak > 0 && streak % 3 === 0) mindMeld.push({ a: uids[i], b: uids[j], streak })
+    }
+  }
+  const outliers = uids
+    .map((uid) => ({ uid, streak: soleOutlierStreak(questions, answersByQuestion, uid, currentIndex) }))
+    .filter(({ streak }) => streak >= 2)
+  const fireworks = isUnanimous(questions[currentIndex], answersByQuestion[currentIndex] ?? {})
+  return { mindMeld, outliers, fireworks }
+}

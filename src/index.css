@@ -178,6 +178,40 @@ button:disabled {
   flex: 1;
 }
 
+.reveal-answer {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.reveal-answer.visible {
+  opacity: 1;
+}
+
+.fireworks {
+  animation: fireworks-pulse 0.6s ease-in-out 2;
+}
+
+@keyframes fireworks-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-answer {
+    transition: none;
+    opacity: 1;
+  }
+
+  .fireworks {
+    animation: none;
+  }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

@@ -1,4 +1,4 @@
-// 全組默契分同整體稱號。規則見 docs/proposal-v2.pdf「結果與稱號」。
+// 全組默契分同整體稱號。規則見 docs/proposal-v3.pdf「結果與稱號」。
 import { roundedAverage } from './compare.js'
 
 /** 全組默契分：十題分數平均（跳過 null），Math.round。全部 null → null。 */

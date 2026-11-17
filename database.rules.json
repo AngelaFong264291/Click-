@@ -57,6 +57,21 @@
             }
           }
         },
+        "scores": {
+          "$questionIndex": {
+            ".write": "auth != null && !data.exists() && root.child('rooms').child($code).child('host').val() === auth.uid && root.child('rooms').child($code).child('status').val() === 'playing' && root.child('rooms').child($code).child('phase').val() === 'answering' && $questionIndex.matches(/^(0|[1-9])$/) && ((root.child('rooms').child($code).child('current').val() === 0 && $questionIndex === '0') || (root.child('rooms').child($code).child('current').val() === 1 && $questionIndex === '1') || (root.child('rooms').child($code).child('current').val() === 2 && $questionIndex === '2') || (root.child('rooms').child($code).child('current').val() === 3 && $questionIndex === '3') || (root.child('rooms').child($code).child('current').val() === 4 && $questionIndex === '4') || (root.child('rooms').child($code).child('current').val() === 5 && $questionIndex === '5') || (root.child('rooms').child($code).child('current').val() === 6 && $questionIndex === '6') || (root.child('rooms').child($code).child('current').val() === 7 && $questionIndex === '7') || (root.child('rooms').child($code).child('current').val() === 8 && $questionIndex === '8') || (root.child('rooms').child($code).child('current').val() === 9 && $questionIndex === '9'))",
+            ".validate": "newData.exists()",
+            "score": {},
+            "consensus": {},
+            "consensuses": {},
+            "playerScores": {},
+            "targetAnswer": {},
+            "events": {},
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
         "createdAt": {
           ".validate": "newData.isNumber() && newData.val() <= now + 60000"
         },

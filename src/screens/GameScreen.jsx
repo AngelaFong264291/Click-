@@ -1,5 +1,6 @@
 import { useEffect, useEffectEvent, useRef, useState } from 'react'
-import { scoreQuestion } from '../game/scoring.js'
+import { scoreFormula } from '../game/formula.js'
+import { thermometer } from '../game/midgame.js'
 import {
   autoSubmitValue,
   questionDurationMs,
@@ -15,6 +16,22 @@ import MatchingQuestion from './questions/MatchingQuestion.jsx'
 import RankingQuestion from './questions/RankingQuestion.jsx'
 import SliderQuestion from './questions/SliderQuestion.jsx'
 import TimeQuestion from './questions/TimeQuestion.jsx'
+
+const FLIP_STAGGER_MS = 250
+
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true,
+  )
+  useEffect(() => {
+    const query = window.matchMedia?.('(prefers-reduced-motion: reduce)')
+    if (!query) return undefined
+    const onChange = () => setReduced(query.matches)
+    query.addEventListener('change', onChange)
+    return () => query.removeEventListener('change', onChange)
+  }, [])
+  return reduced
+}
 
 function valueForDisplay(question, value, language, t) {
   if (value === undefined || value === null) return t('game.unanswered')
@@ -40,21 +57,25 @@ function valueForDisplay(question, value, language, t) {
 export default function GameScreen({ code, room, uid, onLeave }) {
   const { lang, t } = useLanguage()
   const serverNow = useServerTime()
+  const reducedMotion = usePrefersReducedMotion()
   const [error, setError] = useState(null)
   const [advancing, setAdvancing] = useState(false)
+  const [revealedCount, setRevealedCount] = useState(0)
   const revealAttempt = useRef(null)
   const players = sortedPlayers(room.players)
   const question = room.questions?.[room.current]
   const answerSnapshot = room.answers?.[room.current]
   const answers = answerSnapshot ?? {}
   const isHost = room.host === uid
+  const scores = room.scores ?? {}
+  const scoreResult = room.phase === 'reveal' ? scores[room.current] : null
 
   const revealIfReady = useEffectEvent(() => {
     if (!shouldRevealQuestion(room, room.players, answers, serverNow) || !isHost) return
     const attempt = `${room.current}:${room.deadline}`
     if (revealAttempt.current === attempt) return
     revealAttempt.current = attempt
-    revealQuestion(code).catch((error) => {
+    revealQuestion(code, room).catch((error) => {
       console.error('[GameScreen] Failed to reveal question', {
         code: error?.code ?? error?.name,
         error,
@@ -67,6 +88,23 @@ export default function GameScreen({ code, room, uid, onLeave }) {
   useEffect(() => {
     revealIfReady()
   }, [answerSnapshot, isHost, serverNow])
+
+  useEffect(() => {
+    if (room.phase !== 'reveal') {
+      setRevealedCount(0)
+      return undefined
+    }
+    if (reducedMotion) {
+      setRevealedCount(players.length)
+      return undefined
+    }
+    setRevealedCount(0)
+    const timers = players.map((_, index) =>
+      setTimeout(() => setRevealedCount((count) => Math.max(count, index + 1)), (index + 1) * FLIP_STAGGER_MS),
+    )
+    return () => timers.forEach(clearTimeout)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [room.phase, room.current, reducedMotion])
 
   if (!question) {
     return <main className="screen"><p className="error">{t('game.questionUnavailable')}</p></main>
@@ -89,9 +127,11 @@ export default function GameScreen({ code, room, uid, onLeave }) {
 
   const language = lang === 'zh-HK' ? 'zh' : 'en'
   const questionNumber = room.current + 1
-  const score = room.phase === 'reveal'
-    ? scoreQuestion(question, Object.fromEntries(Object.entries(answers).map(([playerUid, answer]) => [playerUid, answer.value])))
-    : null
+  const scoredValues = Object.values(scores).map((s) => (typeof s.score === 'number' ? s.score : null))
+  const thermometerValue = thermometer(scoredValues)
+  const scoredCount = scoredValues.filter((v) => v !== null).length
+  const allRevealed = revealedCount >= players.length
+  const outlierUids = new Set((scoreResult?.events?.outliers ?? []).map((o) => o.uid))
 
   return (
     <main className="screen game-screen">
@@ -99,6 +139,8 @@ export default function GameScreen({ code, room, uid, onLeave }) {
         <p>{t('game.questionProgress', { current: questionNumber, total: room.questions.length })}</p>
         {room.phase === 'answering' && <Countdown room={room} serverNow={serverNow} t={t} />}
       </header>
+
+      <Thermometer value={thermometerValue} count={scoredCount} t={t} />
 
       <h1>{
         question.type === 'guess' && question.targetUid === uid
@@ -122,16 +164,27 @@ export default function GameScreen({ code, room, uid, onLeave }) {
         <section aria-labelledby="reveal-title">
           <h2 id="reveal-title">{t('game.revealTitle')}</h2>
           <ul className="answer-list">
-            {players.map((player) => (
-              <li key={player.uid}>
+            {players.map((player, index) => (
+              <li
+                key={player.uid}
+                className={`reveal-answer${index < revealedCount ? ' visible' : ''}`}
+              >
                 <strong>{player.name}</strong>
-                <span>{valueForDisplay(question, answers[player.uid]?.value, language, t)}</span>
+                <span>{index < revealedCount ? valueForDisplay(question, answers[player.uid]?.value, language, t) : ''}</span>
               </li>
             ))}
           </ul>
-          <p>{t('game.questionScore', { score: score.score === null ? t('game.noScore') : score.score })}</p>
+
+          {allRevealed && scoreResult && (
+            <>
+              <p>{t('game.questionScore', { score: scoreResult.score === null || scoreResult.score === undefined ? t('game.noScore') : scoreResult.score })}</p>
+              <p className="hint">{scoreFormula(question, plainAnswerValues(answers), scoreResult, t, language)}</p>
+              <RevealEvents events={scoreResult.events} players={players} reducedMotion={reducedMotion} t={t} />
+            </>
+          )}
+
           {isHost ? (
-            <button type="button" className="primary" disabled={advancing} onClick={handleNext}>
+            <button type="button" className="primary" disabled={advancing || !allRevealed} onClick={handleNext}>
               {t('game.next')}
             </button>
           ) : (
@@ -148,6 +201,7 @@ export default function GameScreen({ code, room, uid, onLeave }) {
               {player.uid === room.host && <span className="tag">{t('room.host')}</span>}
               {player.left && <span className="tag muted">{t('game.left')}</span>}
               {answers[player.uid] && <span className="tag" aria-label={t('game.answered')}>✓ {t('game.answered')}</span>}
+              {outlierUids.has(player.uid) && <span aria-label={t('game.soleOutlierBadge')}>🤡</span>}
             </li>
           ))}
         </ul>
@@ -156,6 +210,37 @@ export default function GameScreen({ code, room, uid, onLeave }) {
       {error && <p className="error" role="alert">{t(`errors.${error}`)}</p>}
       <button type="button" onClick={onLeave}>{t('room.leave')}</button>
     </main>
+  )
+}
+
+function plainAnswerValues(answers) {
+  return Object.fromEntries(Object.entries(answers).map(([playerUid, answer]) => [playerUid, answer.value]))
+}
+
+function Thermometer({ value, count, t }) {
+  return (
+    <p className="hint" aria-label={t('game.thermometerLabel', { count })}>
+      {t('game.thermometerLabel', { count })}
+      {': '}
+      {value === null ? t('game.noScore') : value}
+    </p>
+  )
+}
+
+function RevealEvents({ events, players, reducedMotion, t }) {
+  if (!events) return null
+  const nameOf = (uid) => players.find((p) => p.uid === uid)?.name ?? uid
+  return (
+    <>
+      {(events.mindMeld ?? []).map(({ a, b }) => (
+        <p key={`${a}-${b}`} role="status">{t('game.mindMeld', { a: nameOf(a), b: nameOf(b) })}</p>
+      ))}
+      {events.fireworks && (
+        reducedMotion
+          ? <p role="status">{t('game.unanimous')}</p>
+          : <p role="status" className="fireworks">{t('game.unanimous')}</p>
+      )}
+    </>
   )
 }
 

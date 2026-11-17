@@ -14,6 +14,8 @@ import {
 import { generateRoomCode, isRoomStale, joinError, pickNextHost } from '../game/room.js'
 import { nextQuestionState, questionDeadline } from '../game/flow.js'
 import { generateQuestions } from '../game/generateQuestions.js'
+import { revealEvents } from '../game/midgame.js'
+import { scoreQuestion } from '../game/scoring.js'
 import { db } from './app.js'
 
 const MAX_CODE_ATTEMPTS = 10
@@ -166,8 +168,23 @@ export function submitAnswer(code, questionIndex, uid, value, ms) {
   return set(ref(db, `rooms/${code}/answers/${questionIndex}/${uid}`), { value, ms })
 }
 
-export function revealQuestion(code) {
-  return update(roomRef(code), { phase: 'reveal' })
+function plainAnswers(entry) {
+  return Object.fromEntries(Object.entries(entry ?? {}).map(([uid, answer]) => [uid, answer.value]))
+}
+
+/**
+ * 揭曉：喺同一個 update 入面計分同寫 phase，等所有裝置睇到一樣嘅結果。
+ * room 要有 questions、answers、players、current（即係 useRoom 嗰個 room 物件）。
+ */
+export function revealQuestion(code, room) {
+  const { current, questions, players } = room
+  const answersByQuestion = questions.map((_, index) => plainAnswers(room.answers?.[index]))
+  const result = scoreQuestion(questions[current], answersByQuestion[current])
+  const events = revealEvents(questions, answersByQuestion, Object.keys(players ?? {}), current)
+  return update(roomRef(code), {
+    phase: 'reveal',
+    [`scores/${current}`]: { ...result, events },
+  })
 }
 
 export async function advanceQuestion(code, current, nextQuestionType) {

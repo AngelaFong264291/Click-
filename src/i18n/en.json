@@ -68,7 +68,19 @@
     "left": "Left",
     "waitingOthers": "Submitted. Waiting for the others…",
     "waitingReveal": "Time is up. Waiting for the host to reveal…",
-    "questionUnavailable": "This question is temporarily unavailable"
+    "questionUnavailable": "This question is temporarily unavailable",
+    "thermometerLabel": "Click-o-meter = average of {count} scored questions",
+    "mindMeld": "{a} and {b} had a Mind Meld!",
+    "soleOutlierBadge": "Repeat outlier",
+    "unanimous": "Everyone agreed! 🎉",
+    "formula": {
+      "choice": "{total} people answered, {matched} picked {answer} → {matched} ÷ {total} = {score}",
+      "guess": "{guessers} people guessed, {correct} got it right → {correct} ÷ {guessers} = {score}",
+      "average": "Consensus {consensus}: {terms} → ÷ {count} = {score}",
+      "matchingAverage": "Consensus match: {terms} lines → average {avgLines} lines ≈ {score}",
+      "noMatch": "No two people who answered matched, so this question scores 0.",
+      "notEnoughAnswers": "Not enough people answered, so this question doesn't count."
+    }
   },
   "errors": {
     "nameRequired": "Please enter your name",

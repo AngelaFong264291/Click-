@@ -102,6 +102,70 @@ describe('Realtime Database room rules', () => {
     await expect(set(answerRef, answer)).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
   })
 
+  it('allows the host to save a score once during the answering phase', async () => {
+    const room = lobbyRoom()
+    room.status = 'playing'
+    room.current = 0
+    room.phase = 'answering'
+    room.deadline = Date.now() + 10_000
+    room.questions = questions
+    await seedRoom(room)
+    const database = testEnv.authenticatedContext(HOST_UID).database()
+    const score = { score: 75, consensus: 'A', playerScores: { [HOST_UID]: 100, [PLAYER_UID]: 50 } }
+
+    await expect(
+      update(ref(database, ROOM_PATH), { phase: 'reveal', 'scores/0': score }),
+    ).resolves.toBeUndefined()
+    await expect(
+      update(ref(database, ROOM_PATH), { 'scores/0': score }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+  })
+
+  it('rejects a non-host saving a score', async () => {
+    const room = lobbyRoom()
+    room.status = 'playing'
+    room.current = 0
+    room.phase = 'answering'
+    room.deadline = Date.now() + 10_000
+    room.questions = questions
+    await seedRoom(room)
+    const database = testEnv.authenticatedContext(PLAYER_UID).database()
+
+    await expect(
+      update(ref(database, ROOM_PATH), { phase: 'reveal', 'scores/0': { score: 75 } }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+  })
+
+  it('rejects an unknown field in a score', async () => {
+    const room = lobbyRoom()
+    room.status = 'playing'
+    room.current = 0
+    room.phase = 'answering'
+    room.deadline = Date.now() + 10_000
+    room.questions = questions
+    await seedRoom(room)
+    const database = testEnv.authenticatedContext(HOST_UID).database()
+
+    await expect(
+      update(ref(database, ROOM_PATH), { phase: 'reveal', 'scores/0': { score: 75, extra: true } }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+  })
+
+  it('rejects a score for a question index other than current', async () => {
+    const room = lobbyRoom()
+    room.status = 'playing'
+    room.current = 0
+    room.phase = 'answering'
+    room.deadline = Date.now() + 10_000
+    room.questions = questions
+    await seedRoom(room)
+    const database = testEnv.authenticatedContext(HOST_UID).database()
+
+    await expect(
+      update(ref(database, ROOM_PATH), { 'scores/1': { score: 75 } }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+  })
+
   it('rejects malformed or out-of-range answers', async () => {
     const room = lobbyRoom()
     room.status = 'playing'

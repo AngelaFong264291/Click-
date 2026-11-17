@@ -68,7 +68,19 @@
     "left": "已離開",
     "waitingOthers": "已提交，等其他玩家…",
     "waitingReveal": "作答時間已到，等房主揭曉…",
-    "questionUnavailable": "暫時讀取唔到呢條題目"
+    "questionUnavailable": "暫時讀取唔到呢條題目",
+    "thermometerLabel": "溫度計 = 已計分 {count} 題的平均",
+    "mindMeld": "{a} 同 {b} 心靈相通！",
+    "soleOutlierBadge": "連續異類",
+    "unanimous": "全場一致！🎉",
+    "formula": {
+      "choice": "{total} 個人入面，{matched} 個揀咗{answer} → {matched} ÷ {total} = {score}",
+      "guess": "{guessers} 個人入面，{correct} 個猜中 → {correct} ÷ {guessers} = {score}",
+      "average": "共識 {consensus}：{terms} → ÷ {count} = {score}",
+      "matchingAverage": "共識配法：{terms} 線 → 平均 {avgLines} 線 ≈ {score}",
+      "noMatch": "作答嘅人入面冇兩個夾到，所以呢題 0 分",
+      "notEnoughAnswers": "呢題答嘅人唔夠，唔計分"
+    }
   },
   "errors": {
     "nameRequired": "請填你個名",

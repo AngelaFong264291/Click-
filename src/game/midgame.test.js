@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { findSoleOutlier, isMatch, isUnanimous, thermometer } from './midgame.js'
+import {
+  findSoleOutlier,
+  isMatch,
+  isUnanimous,
+  matchStreak,
+  revealEvents,
+  soleOutlierStreak,
+  thermometer,
+} from './midgame.js'
 
 const choice = { type: 'choice', options: ['A', 'B', 'C', 'D'] }
 const slider = { type: 'slider' }
@@ -98,5 +106,67 @@ describe('thermometer', () => {
   it('未有分數 → null', () => {
     expect(thermometer([])).toBe(null)
     expect(thermometer([null, null])).toBe(null)
+  })
+})
+
+describe('matchStreak', () => {
+  it('連續吻合先計，唔吻合就清零', () => {
+    const questions = [choice, choice, choice]
+    const answers = [{ a: 'A', b: 'A' }, { a: 'A', b: 'A' }, { a: 'A', b: 'B' }]
+    expect(matchStreak(questions, answers, 'a', 'b', 0)).toBe(1)
+    expect(matchStreak(questions, answers, 'a', 'b', 1)).toBe(2)
+    expect(matchStreak(questions, answers, 'a', 'b', 2)).toBe(0)
+  })
+
+  it('任何一方冇作答嘅題目當冇發生，唔加唔清零', () => {
+    const questions = [choice, choice, choice]
+    const answers = [{ a: 'A', b: 'A' }, { a: 'A' }, { a: 'A', b: 'A' }]
+    expect(matchStreak(questions, answers, 'a', 'b', 2)).toBe(2)
+  })
+})
+
+describe('soleOutlierStreak', () => {
+  it('連續做唯一異類先計', () => {
+    const questions = [choice, choice, choice]
+    const answers = [
+      { a: 'A', b: 'A', c: 'B' },
+      { a: 'A', b: 'A', c: 'B' },
+      { a: 'A', b: 'A', c: 'A' },
+    ]
+    expect(soleOutlierStreak(questions, answers, 'c', 0)).toBe(1)
+    expect(soleOutlierStreak(questions, answers, 'c', 1)).toBe(2)
+    expect(soleOutlierStreak(questions, answers, 'c', 2)).toBe(0)
+  })
+
+  it('作答少過 3 人嘅題目當冇發生，唔加唔清零', () => {
+    const questions = [choice, choice, choice]
+    const answers = [
+      { a: 'A', b: 'A', c: 'B' },
+      { a: 'A', b: 'B' },
+      { a: 'A', b: 'A', c: 'B' },
+    ]
+    expect(soleOutlierStreak(questions, answers, 'c', 2)).toBe(2)
+  })
+})
+
+describe('revealEvents', () => {
+  it('心靈相通每 3 題一次，唯一異類 ≥2 先入列，全場一致先放煙花', () => {
+    const questions = [choice, choice, choice, choice]
+    const answers = [
+      { a: 'A', b: 'A', c: 'B' },
+      { a: 'A', b: 'A', c: 'B' },
+      { a: 'A', b: 'A', c: 'B' },
+      { a: 'A', b: 'A', c: 'A' },
+    ]
+    expect(revealEvents(questions, answers, ['a', 'b', 'c'], 2)).toEqual({
+      mindMeld: [{ a: 'a', b: 'b', streak: 3 }],
+      outliers: [{ uid: 'c', streak: 3 }],
+      fireworks: false,
+    })
+    expect(revealEvents(questions, answers, ['a', 'b', 'c'], 3)).toEqual({
+      mindMeld: [],
+      outliers: [],
+      fireworks: true,
+    })
   })
 })

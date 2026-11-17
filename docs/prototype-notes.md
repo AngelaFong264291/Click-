@@ -4,7 +4,7 @@
 
 ## 文件優先次序
 有衝突時，以排前嘅為準：
-1. `docs/proposal-v2.pdf` — 遊戲規則、計分、資料結構、中英雙語
+1. `docs/proposal-v3.pdf` — 遊戲規則、計分、資料結構、中英雙語
 2. `docs/design/ocamp-design.html` — 視覺設計稿（大花紙 O'Camp 風格）
 3. 呢份 notes
 

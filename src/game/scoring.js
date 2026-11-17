@@ -1,4 +1,4 @@
-// 每題分數、兩人對分。規則見 docs/proposal-v2.pdf「題型與計分」。
+// 每題分數、兩人對分。規則見 docs/proposal-v3.pdf「題型與計分」。
 import {
   HOURS,
   SLIDER_MAX,
