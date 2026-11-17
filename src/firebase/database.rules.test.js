@@ -348,4 +348,27 @@ describe('Realtime Database room rules', () => {
       }),
     ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
   })
+
+  it('rejects a matching answer with zero lines (would be pruned to a value-less write)', async () => {
+    const room = lobbyRoom()
+    room.status = 'playing'
+    room.current = 3
+    room.phase = 'answering'
+    room.deadline = Date.now() + 15_000
+    room.questions = questions
+    await seedRoom(room)
+    expect(questions[3].type).toBe('matching')
+    const database = testEnv.authenticatedContext(PLAYER_UID).database()
+
+    await expect(
+      set(ref(database, `${ROOM_PATH}/answers/3/${PLAYER_UID}`), { value: {}, ms: 250 }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+
+    await expect(
+      set(ref(database, `${ROOM_PATH}/answers/3/${PLAYER_UID}`), {
+        value: { [questions[3].options[0].id]: questions[3].adjectives[0].id },
+        ms: 250,
+      }),
+    ).resolves.toBeUndefined()
+  })
 })

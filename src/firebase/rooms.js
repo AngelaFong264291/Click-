@@ -15,6 +15,7 @@ import { generateRoomCode, isRoomStale, joinError, pickNextHost } from '../game/
 import { nextQuestionState, questionDeadline } from '../game/flow.js'
 import { generateQuestions } from '../game/generateQuestions.js'
 import { revealEvents } from '../game/midgame.js'
+import { normalizeRoom } from '../game/normalizeRoom.js'
 import { buildResults } from '../game/results.js'
 import { scoreQuestion } from '../game/scoring.js'
 import { db } from './app.js'
@@ -240,9 +241,9 @@ export async function claimHost(code, uid, expectedHost) {
   return result.committed
 }
 
-/** 訂閱房間，返回 unsubscribe。callback 收到 room（唔存在就係 null）。 */
+/** 訂閱房間，返回 unsubscribe。callback 收到 room（唔存在就係 null），已經補返俾 Firebase 刪走嘅空欄位（見 normalizeRoom）。 */
 export function subscribeRoom(code, callback, onError) {
-  return onValue(roomRef(code), (snap) => callback(snap.val()), onError)
+  return onValue(roomRef(code), (snap) => callback(normalizeRoom(snap.val())), onError)
 }
 
 /**

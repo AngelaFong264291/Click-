@@ -10,6 +10,7 @@
 - `midgame.js`：`isMatch`（心靈相通）、`findSoleOutlier`（唯一異類）、`isUnanimous`（全場一致）、`thermometer`
 - `overall.js`：`overallScore`、`groupTitle`
 - `flow.js`：題目時限、在線玩家完成判斷、逾時揭曉、自動提交規則、下一題狀態
+- `normalizeRoom.js`：`normalizeRoom`，喺讀 Firebase 房間資料嗰下補返俾刪走嘅空欄位（Firebase 寫入時會刪走 null／undefined／空 object/array，例如少過 2 人作答嗰題嘅 `score: null`），等 `scores`／`results` 入面已經有嘅 entry 永遠係 `scoreQuestion`／`buildResults` 會出嘅完整形狀
 
 ## 計分用嘅題目格式（階段 3 生成題目要跟）
 ```js

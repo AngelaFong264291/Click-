@@ -61,7 +61,7 @@ export default function MatchingQuestion({ question, value, language, disabled, 
         adjectivesLabel={t('game.adjectives')}
         onPick={handlePick}
       />
-      <Button variant="primary" disabled={disabled} onClick={() => onSubmit(value)}>
+      <Button variant="primary" disabled={disabled || Object.keys(value).length === 0} onClick={() => onSubmit(value)}>
         {t('game.confirm')}
       </Button>
     </div>
