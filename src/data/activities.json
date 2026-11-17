@@ -1,5 +1,17 @@
 [
-  { "id": "wake-up", "zh": "起身", "en": "wake up" },
-  { "id": "eat-breakfast", "zh": "食早餐", "en": "eat breakfast" },
-  { "id": "take-a-break", "zh": "休息一下", "en": "take a break" }
+  { "id": "sat-night-bedtime", "text": { "zh": "星期六夜晚，幾點瞓先算正常？", "en": "Saturday night. What's a normal bedtime?" }, "hourRange": { "start": 21, "end": 4 } },
+  { "id": "sun-wake-up", "text": { "zh": "星期日冇鬧鐘，你會幾點起身？", "en": "Sunday, no alarm. When do you wake up?" }, "hourRange": { "start": 6, "end": 14 } },
+  { "id": "first-coffee", "text": { "zh": "一日第一杯咖啡或者奶茶，幾點飲？", "en": "First coffee or milk tea of the day. What time?" }, "hourRange": { "start": 6, "end": 13 } },
+  { "id": "work-start", "text": { "zh": "如果可以自己揀，幾點開工最理想？", "en": "If you could choose, when would work start?" }, "hourRange": { "start": 7, "end": 12 } },
+  { "id": "lunch-time", "text": { "zh": "幾點食 lunch 最啱？", "en": "Ideal lunch time?" }, "hourRange": { "start": 11, "end": 15 } },
+  { "id": "afternoon-tea", "text": { "zh": "下午茶幾點食最啱？", "en": "Perfect time for afternoon tea?" }, "hourRange": { "start": 13, "end": 18 }, "tags": ["hk"] },
+  { "id": "dinner-time", "text": { "zh": "同朋友食飯，約幾點最好？", "en": "Dinner with friends. What time?" }, "hourRange": { "start": 17, "end": 22 } },
+  { "id": "hotpot-start", "text": { "zh": "打邊爐幾點開爐最正？", "en": "Best time to start hotpot?" }, "hourRange": { "start": 17, "end": 0 } },
+  { "id": "night-market", "text": { "zh": "去夜市幾點去最好？", "en": "Best time to hit the night market?" }, "hourRange": { "start": 17, "end": 0 } },
+  { "id": "karaoke-start", "text": { "zh": "唱 K 幾點開始最有 feel？", "en": "When does karaoke really get going?" }, "hourRange": { "start": 19, "end": 2 } },
+  { "id": "late-snack", "text": { "zh": "幾點食宵夜最正？", "en": "Prime time for a late-night snack run?" }, "hourRange": { "start": 21, "end": 3 } },
+  { "id": "season-finale", "text": { "zh": "煲劇到最後一集，幾點都要睇埋先瞓？", "en": "Season finale. How late will you stay up for it?" }, "hourRange": { "start": 22, "end": 4 } },
+  { "id": "nye-home", "text": { "zh": "除夕倒數完，幾點返到屋企？", "en": "New Year's countdown is over. When are you home?" }, "hourRange": { "start": 0, "end": 6 } },
+  { "id": "trip-day-one", "text": { "zh": "旅行第一日，幾點起身出發？", "en": "Day one of a trip. When are you up?" }, "hourRange": { "start": 5, "end": 12 } },
+  { "id": "beach-arrival", "text": { "zh": "去海灘幾點到最好？", "en": "Best time to get to the beach?" }, "hourRange": { "start": 7, "end": 16 } }
 ]

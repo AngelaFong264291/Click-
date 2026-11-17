@@ -22,6 +22,17 @@ export function timeDistance(a, b) {
   return Math.min(d, HOURS - d)
 }
 
+/** 時間題嘅鐘頭範圍（0–23），按次序列晒出嚟；end < start 即跨午夜，照樣行得通。 */
+export function hoursInRange(start, end) {
+  const hours = [start]
+  let hour = start
+  while (hour !== end) {
+    hour = (hour + 1) % HOURS
+    hours.push(hour)
+  }
+  return hours
+}
+
 /** 兩個排序之間，有幾多組物件嘅先後次序一樣（4 個物件共 6 組）。 */
 export function rankingAgreements(a, b) {
   const position = new Map(b.map((id, i) => [id, i]))

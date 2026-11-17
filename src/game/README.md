@@ -15,16 +15,19 @@
 ```js
 {
   type: 'choice' | 'slider' | 'time' | 'matching' | 'ranking' | 'guess',
-  templateId: 'template-id', // 用過嘅模板追蹤；每局不可重複
+  templateId: 'template-id', // 用過嘅模板／活動 id 追蹤；每局不可重複
   text: { zh: '...', en: '...' },
+  theme: { zh: '...', en: '...' },  // choice / slider（通用版）/ matching / ranking / guess 先有；畀 UI 顯示「主題：XXX」做 caption
   options: [...],     // choice / guess：選項；matching：左邊 3 個物件；ranking：要排嘅 4 個物件
   adjectives: [...],  // matching：右邊 3 個形容詞
   targetUid: 'uid',   // guess：被猜嘅玩家
+  sliderLabels: { min: { zh, en }, max: { zh, en } },  // slider 先有：0 分同 10 分兩端嘅文字
+  hours: [21, 22, 23, 0, 1, 2, 3, 4],  // time 先有：呢題可以揀嘅鐘頭，順時間排好，可以跨午夜
 }
 ```
 `options` 同 `adjectives` 每項可以係 id 字串，或者 `{ id, zh, en }`，計分只讀 `id`。
 
-`generateQuestions(playerUids, random)` 係純函數，輸出十題固定次序：choice、slider、choice、matching、choice、time、choice、ranking、guess、choice。每局十個 `templateId` 唔重複；`text` 同選項/形容詞顯示文字以 `{zh, en}` 儲存。guess 嘅 `{name}` placeholder 只喺 UI 顯示時以 `targetUid` 對應玩家姓名代入，唔寫入題目。
+`generateQuestions(playerUids, random)` 係純函數，輸出十題固定次序：choice、slider、choice、matching、choice、time、choice、ranking、guess、choice。每局十個 `templateId` 唔重複；`text` 同選項/形容詞顯示文字以 `{zh, en}` 儲存。guess 嘅 `{name}` placeholder 只喺 UI 顯示時以 `targetUid` 對應玩家姓名代入，唔寫入題目。揀邊個主題、邊個模板嘅規則見 `src/data/README.md`。
 
 答案係 `{ [uid]: value }`，冇作答嘅玩家冇 entry：
 - choice / guess：option id

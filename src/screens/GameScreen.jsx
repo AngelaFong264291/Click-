@@ -108,6 +108,7 @@ export default function GameScreen({ code, room, uid, onLeave }) {
         error,
       })
       setError('generic')
+    } finally {
       setAdvancing(false)
     }
   }
@@ -128,6 +129,8 @@ export default function GameScreen({ code, room, uid, onLeave }) {
       </header>
 
       <Thermometer value={thermometerValue} count={scoredCount} t={t} />
+
+      {question.theme && <p className="hint">{t('game.themeLabel', { name: question.theme[language] })}</p>}
 
       <h1>{
         question.type === 'guess' && question.targetUid === uid

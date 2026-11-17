@@ -1,3 +1,4 @@
+import { hoursInRange } from './compare.js'
 import adjectives from '../data/adjectives.json'
 import activities from '../data/activities.json'
 import groups from '../data/groups.json'
@@ -39,15 +40,39 @@ function sample(items, count, random) {
   return shuffled.slice(0, count)
 }
 
-function eligibleGroups(minItems, minAdjectives = 0) {
-  return groups.filter((group) => {
-    const compatibleCount = adjectives.filter((adjective) => adjective.groups.includes(group.id)).length
-    return group.items.length >= minItems && compatibleCount >= minAdjectives
-  })
+function isCompatibleAdjective(adjective, group) {
+  return adjective.groups === 'all' || adjective.groups.includes(group.id)
 }
 
 function compatibleAdjectives(group) {
-  return adjectives.filter((adjective) => adjective.groups.includes(group.id))
+  return adjectives.filter((adjective) => isCompatibleAdjective(adjective, group))
+}
+
+function eligibleGroups(minItems, minAdjectives = 0) {
+  return groups.filter((group) => group.items.length >= minItems && compatibleAdjectives(group).length >= minAdjectives)
+}
+
+function isSuited(template, group) {
+  return template.suited === 'all' || template.suited.includes(group.category)
+}
+
+/**
+ * 喺 candidateTemplates × 適用嘅主題入面揀一對。方向盡量唔重複（唔夠先放寬，唔會因為方向唔夠而失敗）；
+ * 類別唔啱嘅主題一定唔會揀（呢個係硬性規則，冇得放寬）。
+ */
+function pickTemplateGroupPair(candidateTemplates, minItems, minAdjectives, usedDirections, random, description) {
+  const eligible = eligibleGroups(minItems, minAdjectives)
+  const pairs = []
+  for (const template of candidateTemplates) {
+    for (const group of eligible) {
+      if (isSuited(template, group)) pairs.push({ template, group })
+    }
+  }
+  if (pairs.length === 0) throw new Error(`Cannot generate a full game: no template/theme pair available for ${description}.`)
+  const fresh = pairs.filter((pair) => !usedDirections.has(pair.group.direction))
+  const chosen = pickOne(fresh.length > 0 ? fresh : pairs, random, description)
+  usedDirections.add(chosen.group.direction)
+  return chosen
 }
 
 function renderText(template, values) {
@@ -90,68 +115,85 @@ export function generateQuestions(playerUids, random = Math.random) {
     throw new Error(`Cannot generate a full game: question content is invalid. ${contentErrors.join('; ')}`)
   }
 
-  const choiceTemplates = sample(templates.filter((template) => template.type === 'choice'), 5, random)
-  const templateByType = Object.fromEntries(
-    ['slider', 'matching', 'time', 'ranking', 'guess'].map((type) => [
-      type,
-      pickOne(templates.filter((template) => template.type === type), random, `${type} template`),
-    ]),
+  const usedDirections = new Set()
+  let remainingChoiceTemplates = templates.filter((template) => template.type === 'choice')
+  const rankingTemplates = templates.filter((template) => template.type === 'ranking')
+  const guessTemplates = templates.filter((template) => template.type === 'guess')
+  const matchingTemplate = pickOne(
+    templates.filter((template) => template.type === 'matching'),
+    random,
+    'matching template',
   )
-  let choiceIndex = 0
+  const sliderTemplate = pickOne(
+    templates.filter((template) => template.type === 'slider'),
+    random,
+    'slider template',
+  )
 
   return QUESTION_ORDER.map((type) => {
     if (type === 'choice') {
-      const template = choiceTemplates[choiceIndex++]
-      const group = pickOne(eligibleGroups(4), random, 'group with at least 4 items for choice questions')
+      const { template, group } = pickTemplateGroupPair(remainingChoiceTemplates, 4, 0, usedDirections, random, 'choice question')
+      remainingChoiceTemplates = remainingChoiceTemplates.filter((candidate) => candidate.id !== template.id)
       return makeQuestion(
         type,
         template,
         { item: group.name },
-        { options: sample(group.items, 4, random) },
+        { theme: group.name, options: sample(group.items, 4, random) },
       )
     }
 
-    const template = templateByType[type]
     if (type === 'slider') {
-      const group = pickOne(eligibleGroups(1, 1), random, 'group with an item and compatible adjective for slider')
+      if (sliderTemplate.standalone) {
+        return makeQuestion(type, sliderTemplate, {}, { sliderLabels: sliderTemplate.sliderLabels })
+      }
+      const { group } = pickTemplateGroupPair([sliderTemplate], 1, 1, usedDirections, random, 'slider question')
       const item = pickOne(group.items, random, 'slider item')
       const adjective = pickOne(compatibleAdjectives(group), random, 'compatible slider adjective')
-      return makeQuestion(type, template, { item, adj: adjective })
+      return makeQuestion(type, sliderTemplate, { item, adj: adjective }, { theme: group.name, sliderLabels: sliderTemplate.sliderLabels })
     }
+
     if (type === 'matching') {
-      const group = pickOne(eligibleGroups(3, 3), random, 'group with 3 items and 3 compatible adjectives for matching')
+      const { group } = pickTemplateGroupPair([matchingTemplate], 3, 3, usedDirections, random, 'matching question')
       return makeQuestion(
         type,
-        template,
+        matchingTemplate,
         { item: group.name },
         {
+          theme: group.name,
           options: sample(group.items, 3, random),
           adjectives: sample(compatibleAdjectives(group), 3, random),
         },
       )
     }
+
     if (type === 'time') {
       const activity = pickOne(activities, random, 'activity for the time question')
-      return makeQuestion(type, template, { item: activity })
+      return {
+        type,
+        templateId: activity.id,
+        text: activity.text,
+        hours: hoursInRange(activity.hourRange.start, activity.hourRange.end),
+      }
     }
+
     if (type === 'ranking') {
-      const group = pickOne(eligibleGroups(4, 1), random, 'group with 4 items and compatible adjective for ranking')
+      const { template, group } = pickTemplateGroupPair(rankingTemplates, 4, 0, usedDirections, random, 'ranking question')
       const adjective = pickOne(compatibleAdjectives(group), random, 'compatible ranking adjective')
       return makeQuestion(
         type,
         template,
         { item: group.name, adj: adjective },
-        { options: sample(group.items, 4, random) },
+        { theme: group.name, options: sample(group.items, 4, random) },
       )
     }
 
-    const group = pickOne(eligibleGroups(4), random, 'group with at least 4 items for guess questions')
+    const { template, group } = pickTemplateGroupPair(guessTemplates, 4, 0, usedDirections, random, 'guess question')
     const targetUid = pickOne(playerUids, random, 'guess target')
     return makeQuestion(
       type,
       template,
       { item: group.name },
-      { options: sample(group.items, 4, random), targetUid },
+      { theme: group.name, options: sample(group.items, 4, random), targetUid },
     )
   })
 }

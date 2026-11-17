@@ -1,32 +1,194 @@
 [
   {
     "id": "breakfast",
-    "name": { "zh": "早餐", "en": "breakfasts" },
+    "name": { "zh": "早餐", "en": "Breakfast" },
+    "category": "food",
+    "direction": "taste",
     "items": [
-      { "id": "pineapple-bun", "zh": "菠蘿包", "en": "pineapple bun" },
-      { "id": "egg-tart", "zh": "蛋撻", "en": "egg tart" },
-      { "id": "toast", "zh": "多士", "en": "toast" },
-      { "id": "congee", "zh": "粥", "en": "congee" }
+      { "id": "pineapple-bun-butter", "zh": "菠蘿油", "en": "Pineapple bun with butter", "tags": ["hk"] },
+      { "id": "congee", "zh": "粥", "en": "Congee" },
+      { "id": "onigiri", "zh": "飯糰", "en": "Onigiri" },
+      { "id": "kaya-toast", "zh": "咖椰多士", "en": "Kaya toast" },
+      { "id": "soy-milk-youtiao", "zh": "豆漿油條", "en": "Soy milk & youtiao" },
+      { "id": "spam-egg-noodles", "zh": "餐蛋麵", "en": "Spam & egg noodles", "tags": ["hk"] },
+      { "id": "nasi-lemak", "zh": "椰漿飯", "en": "Nasi lemak" },
+      { "id": "skip-breakfast", "zh": "唔食", "en": "Skipping it" }
     ]
   },
   {
-    "id": "drinks",
-    "name": { "zh": "飲品", "en": "drinks" },
+    "id": "convenience-store",
+    "name": { "zh": "便利店必買", "en": "Convenience store hauls" },
+    "category": "food",
+    "direction": "taste",
     "items": [
-      { "id": "milk-tea", "zh": "奶茶", "en": "milk tea" },
-      { "id": "lemon-tea", "zh": "檸檬茶", "en": "lemon tea" },
-      { "id": "soy-milk", "zh": "豆漿", "en": "soy milk" },
-      { "id": "coffee", "zh": "咖啡", "en": "coffee" }
+      { "id": "tea-egg", "zh": "茶葉蛋", "en": "Tea egg" },
+      { "id": "cup-noodles", "zh": "杯麵", "en": "Cup noodles" },
+      { "id": "oden", "zh": "關東煮", "en": "Oden" },
+      { "id": "siu-mai", "zh": "燒賣", "en": "Convenience store siu mai", "tags": ["hk"] },
+      { "id": "fried-chicken", "zh": "炸雞", "en": "Fried chicken" },
+      { "id": "ice-pop", "zh": "雪條", "en": "Ice pop" },
+      { "id": "energy-drink", "zh": "能量飲品", "en": "Energy drink" },
+      { "id": "microwave-bento", "zh": "叮叮飯盒", "en": "Microwave bento" }
     ]
   },
   {
-    "id": "outings",
-    "name": { "zh": "活動", "en": "activities" },
+    "id": "weekend-plans",
+    "name": { "zh": "週末大計", "en": "Weekend plans" },
+    "category": "activity",
+    "direction": "social-energy",
     "items": [
-      { "id": "beach", "zh": "去沙灘", "en": "going to the beach" },
-      { "id": "karaoke", "zh": "唱 K", "en": "karaoke" },
-      { "id": "museum", "zh": "逛博物館", "en": "visiting a museum" },
-      { "id": "hiking", "zh": "行山", "en": "hiking" }
+      { "id": "sleep-till-noon", "zh": "瞓到晏晝", "en": "Sleeping till noon" },
+      { "id": "hiking", "zh": "行山", "en": "Hiking" },
+      { "id": "brunch", "zh": "食 brunch", "en": "Brunch" },
+      { "id": "cafe-hopping", "zh": "Cafe 打卡", "en": "Café hopping" },
+      { "id": "binge-show", "zh": "喺屋企煲劇", "en": "Bingeing a show" },
+      { "id": "karaoke-weekend", "zh": "唱 K", "en": "Karaoke" },
+      { "id": "beach-day", "zh": "去海灘", "en": "Beach day" },
+      { "id": "mall-wander", "zh": "行商場", "en": "Wandering a mall" }
+    ]
+  },
+  {
+    "id": "de-stress",
+    "name": { "zh": "減壓方式", "en": "Ways to de-stress" },
+    "category": "activity",
+    "direction": "social-energy",
+    "items": [
+      { "id": "nap-it-off", "zh": "瞓一覺", "en": "Nap it off" },
+      { "id": "stress-eating", "zh": "狂食", "en": "Stress eating" },
+      { "id": "vent-to-friend", "zh": "搵人吹水", "en": "Ranting to a friend" },
+      { "id": "workout", "zh": "做運動", "en": "Working out" },
+      { "id": "online-shopping", "zh": "網購", "en": "Add to cart, add to cart" },
+      { "id": "good-cry", "zh": "喊一場", "en": "A good cry" },
+      { "id": "gaming", "zh": "打機", "en": "Gaming" },
+      { "id": "clean-everything", "zh": "瘋狂執屋", "en": "Cleaning everything" }
+    ]
+  },
+  {
+    "id": "sleeping-positions",
+    "name": { "zh": "瞓覺姿勢", "en": "Sleeping positions" },
+    "category": "habit",
+    "direction": "routine",
+    "items": [
+      { "id": "starfish", "zh": "大字型", "en": "Starfish" },
+      { "id": "curled-shrimp", "zh": "蝦米", "en": "Curled-up shrimp" },
+      { "id": "face-down", "zh": "趴住瞓", "en": "Face-down" },
+      { "id": "pillow-hugger", "zh": "攬住個枕", "en": "Pillow hugger" },
+      { "id": "blanket-burrito", "zh": "被包身", "en": "Blanket burrito" },
+      { "id": "one-leg-out", "zh": "一隻腳伸出被", "en": "One leg out" },
+      { "id": "vampire-coffin", "zh": "規規矩矩平躺", "en": "Vampire in a coffin" },
+      { "id": "different-every-night", "zh": "每晚都唔同", "en": "Different every night" }
+    ]
+  },
+  {
+    "id": "travel-destinations",
+    "name": { "zh": "旅行目的地", "en": "Travel destinations" },
+    "category": "place",
+    "direction": "adventure",
+    "items": [
+      { "id": "tokyo", "zh": "東京", "en": "Tokyo" },
+      { "id": "seoul", "zh": "首爾", "en": "Seoul" },
+      { "id": "taipei", "zh": "台北", "en": "Taipei" },
+      { "id": "bangkok", "zh": "曼谷", "en": "Bangkok" },
+      { "id": "bali", "zh": "峇里", "en": "Bali" },
+      { "id": "hokkaido", "zh": "北海道", "en": "Hokkaido" },
+      { "id": "iceland", "zh": "冰島", "en": "Iceland" },
+      { "id": "staycation", "zh": "留喺屋企", "en": "Staycation" }
+    ]
+  },
+  {
+    "id": "animals",
+    "name": { "zh": "動物", "en": "Animals" },
+    "category": "animal",
+    "direction": "humor",
+    "items": [
+      { "id": "shiba-inu", "zh": "柴犬", "en": "Shiba Inu" },
+      { "id": "capybara", "zh": "水豚", "en": "Capybara" },
+      { "id": "raccoon", "zh": "浣熊", "en": "Raccoon" },
+      { "id": "penguin", "zh": "企鵝", "en": "Penguin" },
+      { "id": "sloth", "zh": "樹懶", "en": "Sloth" },
+      { "id": "owl", "zh": "貓頭鷹", "en": "Owl" },
+      { "id": "platypus", "zh": "鴨嘴獸", "en": "Platypus" },
+      { "id": "goldfish", "zh": "金魚", "en": "Goldfish" }
+    ]
+  },
+  {
+    "id": "household-objects",
+    "name": { "zh": "家居雜物", "en": "Household objects" },
+    "category": "object",
+    "direction": "humor",
+    "items": [
+      { "id": "coat-hanger", "zh": "衣架", "en": "Coat hanger" },
+      { "id": "tv-remote", "zh": "遙控", "en": "TV remote" },
+      { "id": "bag-of-bags", "zh": "一袋膠袋", "en": "The bag of bags" },
+      { "id": "slippers", "zh": "拖鞋", "en": "Slippers" },
+      { "id": "rice-cooker", "zh": "電飯煲", "en": "Rice cooker" },
+      { "id": "dehumidifier", "zh": "抽濕機", "en": "Dehumidifier", "tags": ["hk"] },
+      { "id": "power-strip", "zh": "拖板", "en": "Power strip" },
+      { "id": "tissue-box", "zh": "紙巾盒", "en": "Tissue box" }
+    ]
+  },
+  {
+    "id": "desert-island-items",
+    "name": { "zh": "荒島必備", "en": "Desert island items" },
+    "category": "object",
+    "direction": "values",
+    "items": [
+      { "id": "swiss-army-knife", "zh": "瑞士刀", "en": "Swiss army knife" },
+      { "id": "lighter", "zh": "打火機", "en": "Lighter" },
+      { "id": "instant-noodles-crate", "zh": "一箱即食麵", "en": "A crate of instant noodles" },
+      { "id": "sunscreen", "zh": "防曬", "en": "Sunscreen" },
+      { "id": "pillow", "zh": "枕頭", "en": "Pillow" },
+      { "id": "guitar", "zh": "結他", "en": "Guitar" },
+      { "id": "phone-no-signal", "zh": "冇訊號嘅手機", "en": "Phone with zero signal" },
+      { "id": "best-friend", "zh": "你個 best friend", "en": "Your best friend" }
+    ]
+  },
+  {
+    "id": "pet-peeves",
+    "name": { "zh": "雷點", "en": "Pet peeves" },
+    "category": "habit",
+    "direction": "style",
+    "items": [
+      { "id": "left-on-read", "zh": "已讀不回", "en": "Left on read" },
+      { "id": "loud-chewing", "zh": "食嘢大聲", "en": "Loud chewing" },
+      { "id": "late-no-text", "zh": "遲到又唔講", "en": "Late with no text" },
+      { "id": "speakerphone-train", "zh": "車廂開擴音講電話", "en": "Speakerphone on the train" },
+      { "id": "family-chat-flowers", "zh": "家庭群組長輩圖", "en": "Good-morning flower pics in the family chat" },
+      { "id": "queue-jumpers", "zh": "打尖", "en": "Queue jumpers" },
+      { "id": "reply-k", "zh": "淨係覆「ok」", "en": "Replying just \"k\"" },
+      { "id": "kick-cinema-seat", "zh": "戲院踢你張櫈", "en": "Kicking your cinema seat" }
+    ]
+  },
+  {
+    "id": "late-excuses",
+    "name": { "zh": "遲到藉口", "en": "Excuses for being late" },
+    "category": "habit",
+    "direction": "style",
+    "items": [
+      { "id": "train-delay", "zh": "地鐵延誤", "en": "Train delay" },
+      { "id": "lost-keys", "zh": "搵唔到鎖匙", "en": "Couldn't find my keys" },
+      { "id": "traffic", "zh": "塞車", "en": "Traffic" },
+      { "id": "mum-needed-me", "zh": "阿媽叫我做嘢", "en": "Mum needed me" },
+      { "id": "cat-sat-on-me", "zh": "隻貓瞓咗喺我身上", "en": "The cat sat on me" },
+      { "id": "alarm-didnt-go-off", "zh": "鬧鐘冇響", "en": "Alarm didn't go off" },
+      { "id": "almost-there", "zh": "「到樓下喇」（其實未出門）", "en": "\"Almost there\" (still at home)" },
+      { "id": "rainstorm", "zh": "落大雨", "en": "Rainstorm" }
+    ]
+  },
+  {
+    "id": "furniture",
+    "name": { "zh": "家具", "en": "Furniture" },
+    "category": "object",
+    "direction": "instinct",
+    "items": [
+      { "id": "sofa", "zh": "梳化", "en": "Sofa" },
+      { "id": "beanbag", "zh": "懶人椅", "en": "Beanbag" },
+      { "id": "bunk-bed", "zh": "碌架床", "en": "Bunk bed" },
+      { "id": "folding-table", "zh": "摺枱", "en": "Folding table" },
+      { "id": "rocking-chair", "zh": "搖搖椅", "en": "Rocking chair" },
+      { "id": "wardrobe", "zh": "衣櫃", "en": "Wardrobe" },
+      { "id": "hammock", "zh": "吊床", "en": "Hammock" },
+      { "id": "gaming-chair", "zh": "電競椅", "en": "Gaming chair" }
     ]
   }
 ]

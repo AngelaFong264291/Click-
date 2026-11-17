@@ -1,9 +1,21 @@
 [
-  { "id": "comforting", "zh": "治癒", "en": "comforting", "groups": ["breakfast", "drinks"] },
-  { "id": "fancy", "zh": "高級", "en": "fancy", "groups": ["breakfast", "drinks"] },
-  { "id": "bold", "zh": "大膽", "en": "bold", "groups": ["breakfast", "drinks", "outings"] },
-  { "id": "refreshing", "zh": "清爽", "en": "refreshing", "groups": ["drinks", "outings"] },
-  { "id": "relaxing", "zh": "放鬆", "en": "relaxing", "groups": ["breakfast", "drinks", "outings"] },
-  { "id": "adventurous", "zh": "刺激", "en": "adventurous", "groups": ["outings", "breakfast"] },
-  { "id": "social", "zh": "適合一班人", "en": "social", "groups": ["outings", "drinks"] }
+  { "id": "romantic", "zh": "浪漫", "en": "romantic", "groups": "all" },
+  { "id": "dangerous", "zh": "危險", "en": "dangerous", "groups": "all" },
+  { "id": "comforting", "zh": "治癒", "en": "comforting", "groups": "all" },
+  { "id": "cool", "zh": "有型", "en": "cool", "groups": "all" },
+  { "id": "suspicious", "zh": "可疑", "en": "suspicious", "groups": "all" },
+  { "id": "extra", "zh": "浮誇", "en": "extra", "groups": "all" },
+  { "id": "lonely", "zh": "寂寞", "en": "lonely", "groups": "all" },
+  { "id": "smart", "zh": "聰明", "en": "smart", "groups": "all" },
+  { "id": "cheesy", "zh": "老土", "en": "cheesy", "groups": "all" },
+  { "id": "clueless", "zh": "戇居", "en": "clueless", "groups": "all" },
+  { "id": "aloof", "zh": "高冷", "en": "aloof", "groups": "all" },
+  { "id": "sneaky", "zh": "有心機", "en": "sneaky", "groups": "all" },
+  { "id": "dramatic", "zh": "情緒化", "en": "dramatic", "groups": "all" },
+  { "id": "bougie", "zh": "識嘆", "en": "bougie", "groups": "all" },
+  { "id": "lazy", "zh": "懶", "en": "lazy", "groups": "all" },
+  { "id": "artsy", "zh": "文青", "en": "artsy", "groups": "all" },
+  { "id": "reliable", "zh": "可靠", "en": "reliable", "groups": "all" },
+  { "id": "sexy", "zh": "性感", "en": "sexy", "groups": "all", "tags": ["spicy"] },
+  { "id": "flirty", "zh": "花心", "en": "flirty", "groups": "all", "tags": ["spicy"] }
 ]

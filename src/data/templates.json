@@ -1,12 +1,78 @@
 [
-  { "id": "choice-a", "type": "choice", "text": { "zh": "邊款{item}最似你？", "en": "Which {item} feels most like you?" } },
-  { "id": "choice-b", "type": "choice", "text": { "zh": "今日你會揀邊款{item}？", "en": "Which {item} would you pick today?" } },
-  { "id": "choice-c", "type": "choice", "text": { "zh": "邊款{item}最啱你？", "en": "Which {item} suits you best?" } },
-  { "id": "choice-d", "type": "choice", "text": { "zh": "你最想要邊款{item}？", "en": "Which {item} would you want most?" } },
-  { "id": "choice-e", "type": "choice", "text": { "zh": "如果而家要揀，你會揀邊款{item}？", "en": "If you had to choose now, which {item} would you pick?" } },
-  { "id": "slider-a", "type": "slider", "text": { "zh": "{item}有幾{adj}？", "en": "How {adj} is {item}?" } },
-  { "id": "matching-a", "type": "matching", "text": { "zh": "將以下{item}配對到最適合嘅形容詞。", "en": "Match these {item} with the adjectives that fit them best." } },
-  { "id": "time-a", "type": "time", "text": { "zh": "你幾點會{item}？", "en": "What time would you {item}?" } },
-  { "id": "ranking-a", "type": "ranking", "text": { "zh": "由最到最唔{adj}，排好以下{item}。", "en": "Rank these {item} from most to least {adj}." } },
-  { "id": "guess-a", "type": "guess", "text": { "zh": "你估{name}會揀邊款{item}？", "en": "Which {item} do you think {name} would choose?" } }
+  { "id": "choice-ex", "type": "choice", "suited": "all", "tags": ["spicy"], "text": { "zh": "邊樣最似你前度？", "en": "Which one is basically your ex?" } },
+  { "id": "choice-mood", "type": "choice", "suited": "all", "text": { "zh": "邊樣最似今日嘅你？", "en": "Which one is today's mood?" } },
+  { "id": "choice-boss", "type": "choice", "suited": "all", "text": { "zh": "邊樣最似你老細？", "en": "Which one is secretly your boss?" } },
+  { "id": "choice-groupchat", "type": "choice", "suited": "all", "text": { "zh": "如果我哋呢班人係其中一樣，會係邊樣？", "en": "If this group chat were one of these, which one?" } },
+  { "id": "choice-monday", "type": "choice", "suited": "all", "text": { "zh": "邊樣最似星期一朝早？", "en": "Which one is a Monday morning?" } },
+  { "id": "choice-most-you", "type": "choice", "suited": "all", "text": { "zh": "邊樣最似你？", "en": "Which one is the most you?" } },
+  { "id": "choice-main-character", "type": "choice", "suited": ["food", "object", "animal", "place"], "text": { "zh": "邊樣有主角光環？", "en": "Which one is the main character?" } },
+  { "id": "choice-moody-photo", "type": "choice", "suited": ["food", "object", "animal"], "text": { "zh": "邊樣最似會出黑白文青相？", "en": "Which one posts moody black-and-white photos?" } },
+  { "id": "choice-zombie", "type": "choice", "suited": ["food", "object", "animal"], "text": { "zh": "殭屍片入面，邊樣第一個死？", "en": "Zombie movie. Which one dies first?" } },
+  { "id": "choice-karaoke-mic", "type": "choice", "suited": ["food", "object", "animal"], "text": { "zh": "去 K 房，邊樣會霸住支咪唔放？", "en": "Which one hogs the karaoke mic all night?" } },
+  { "id": "choice-crush", "type": "choice", "suited": ["food", "object", "animal"], "tags": ["spicy"], "text": { "zh": "邊樣暗戀緊你？", "en": "Which one secretly has a crush on you?" } },
+  { "id": "choice-forever", "type": "choice", "suited": ["food", "object", "place", "activity"], "text": { "zh": "一世淨係揀得一樣，你揀邊樣？", "en": "One for the rest of your life. Go." } },
+  { "id": "choice-not-sharing", "type": "choice", "suited": ["food", "object"], "text": { "zh": "邊樣你死都唔會分俾人？", "en": "Which one are you NOT sharing?" } },
+  { "id": "choice-free-gift", "type": "choice", "suited": ["food", "object", "place"], "text": { "zh": "而家即刻送你一樣，你要邊樣？", "en": "Free gift, right now. Which one?" } },
+  { "id": "choice-overrated", "type": "choice", "suited": ["food", "object", "animal", "place", "activity"], "text": { "zh": "邊樣最被高估？", "en": "Most overrated?" } },
+  { "id": "choice-underrated", "type": "choice", "suited": ["food", "object", "animal", "place", "activity"], "text": { "zh": "邊樣最被低估？", "en": "Criminally underrated?" } },
+  { "id": "choice-bad-day", "type": "choice", "suited": ["food", "activity", "place"], "text": { "zh": "今日好衰，邊樣救到你？", "en": "Terrible day. Which one saves it?" } },
+  { "id": "choice-first-date", "type": "choice", "suited": ["food", "activity", "place"], "text": { "zh": "第一次約會，揀邊樣最安全？", "en": "First date. Which one's the safe bet?" } },
+  { "id": "choice-guilty", "type": "choice", "suited": ["habit"], "text": { "zh": "邊樣你自己都中過？", "en": "Be honest: which one have you done?" } },
+  { "id": "choice-snap", "type": "choice", "suited": ["habit"], "text": { "zh": "邊樣最快令你爆？", "en": "Which one makes you snap fastest?" } },
+  { "id": "choice-forgive", "type": "choice", "suited": ["habit"], "text": { "zh": "邊樣你最易原諒？", "en": "Which one would you let slide?" } },
+
+  {
+    "id": "slider-generic",
+    "type": "slider",
+    "suited": "all",
+    "sliderLabels": { "min": { "zh": "零分", "en": "Zero" }, "max": { "zh": "爆燈", "en": "Off the charts" } },
+    "text": { "zh": "{item}有幾{adj}？", "en": "{item}: how {adj}, out of 10?" }
+  },
+  {
+    "id": "slider-bubble-tea",
+    "type": "slider",
+    "standalone": true,
+    "sliderLabels": { "min": { "zh": "無糖", "en": "No sugar" }, "max": { "zh": "全糖", "en": "Full sugar, no regrets" } },
+    "text": { "zh": "飲手搖飲，你通常幾分甜？", "en": "Bubble tea sugar level?" }
+  },
+  {
+    "id": "slider-spice",
+    "type": "slider",
+    "standalone": true,
+    "sliderLabels": { "min": { "zh": "唔食得辣", "en": "Ketchup is spicy" }, "max": { "zh": "越辣越好", "en": "Bring the pain" } },
+    "text": { "zh": "食辣你去到幾盡？", "en": "How much spice can you handle?" }
+  },
+  {
+    "id": "slider-trip-planning",
+    "type": "slider",
+    "standalone": true,
+    "sliderLabels": { "min": { "zh": "去到先算", "en": "Wing it" }, "max": { "zh": "Excel 排到分鐘", "en": "Spreadsheet, by the minute" } },
+    "text": { "zh": "去旅行，你計劃幾仔細？", "en": "How planned is your trip?" }
+  },
+  {
+    "id": "slider-social-battery",
+    "type": "slider",
+    "standalone": true,
+    "sliderLabels": { "min": { "zh": "即刻要返屋企", "en": "Get me home" }, "max": { "zh": "去埋下一場", "en": "Where's the afterparty?" } },
+    "text": { "zh": "夜晚 11 點，你社交電量仲剩幾多？", "en": "It's 11pm. How's your social battery?" }
+  },
+  {
+    "id": "slider-reply-speed",
+    "type": "slider",
+    "standalone": true,
+    "sliderLabels": { "min": { "zh": "隔幾日先覆", "en": "Days later" }, "max": { "zh": "秒覆", "en": "Instantly" } },
+    "text": { "zh": "收到朋友 message，你通常幾快覆？", "en": "How fast do you reply to friends?" }
+  },
+
+  { "id": "matching-generic", "type": "matching", "suited": "all", "text": { "zh": "將三樣嘢同三個形容詞配對，一樣配一個", "en": "Match each one to a word. One each." } },
+
+  { "id": "ranking-adj", "type": "ranking", "suited": "all", "text": { "zh": "按{adj}程度排：最{adj}排第一", "en": "Rank by how {adj}. Most {adj} goes first." } },
+  { "id": "ranking-want", "type": "ranking", "suited": ["food", "object", "place", "activity"], "text": { "zh": "由最想要排到最唔想要", "en": "Rank from \"gimme\" to \"no thanks\"" } },
+  { "id": "ranking-tolerate", "type": "ranking", "suited": ["habit"], "text": { "zh": "由最忍到排到最忍唔到", "en": "Rank from \"fine, whatever\" to \"I'm leaving\"" } },
+
+  { "id": "guess-forever", "type": "guess", "suited": ["food", "object", "place", "activity"], "text": { "zh": "{name}一世淨係揀得一樣，佢會揀邊樣？", "en": "{name} gets one for life. What do they pick?" } },
+  { "id": "guess-bad-day", "type": "guess", "suited": ["food", "activity", "place"], "text": { "zh": "{name}今日好衰，邊樣救到佢？", "en": "{name} had a terrible day. What saves it?" } },
+  { "id": "guess-most-them", "type": "guess", "suited": "all", "text": { "zh": "邊樣最似{name}？", "en": "Which one is the most {name}?" } },
+  { "id": "guess-snap", "type": "guess", "suited": ["habit"], "text": { "zh": "邊樣最快令{name}爆？", "en": "What makes {name} snap fastest?" } },
+  { "id": "guess-not-sharing", "type": "guess", "suited": ["food", "object"], "text": { "zh": "{name}死都唔會分俾人嘅係邊樣？", "en": "What is {name} absolutely not sharing?" } }
 ]

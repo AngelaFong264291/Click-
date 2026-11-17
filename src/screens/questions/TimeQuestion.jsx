@@ -1,8 +1,9 @@
-export default function TimeQuestion({ value, disabled, t, onChange, onSubmit }) {
+export default function TimeQuestion({ question, value, disabled, t, onChange, onSubmit }) {
+  const hours = question.hours
   return (
     <div className="stack">
       <div className="time-grid" role="group" aria-label={t('game.timeLabel')}>
-        {Array.from({ length: 24 }, (_, hour) => (
+        {hours.map((hour) => (
           <button
             key={hour}
             type="button"
@@ -17,7 +18,9 @@ export default function TimeQuestion({ value, disabled, t, onChange, onSubmit })
       <button type="button" className="primary" disabled={disabled || value === undefined} onClick={() => onSubmit(value)}>
         {t('game.confirm')}
       </button>
-      <span className="sr-only">{t('game.timeRange')}</span>
+      <span className="sr-only">
+        {t('game.timeRange', { start: hours[0], end: hours[hours.length - 1] })}
+      </span>
     </div>
   )
 }

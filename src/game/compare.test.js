@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  hoursInRange,
   idsOf,
   normalizeAnswer,
   permutations,
@@ -21,6 +22,13 @@ describe('基本比較', () => {
     expect(timeDistance(20, 2)).toBe(6)
     expect(timeDistance(0, 12)).toBe(12)
     expect(timeDistance(5, 5)).toBe(0)
+  })
+
+  it('hoursInRange 按次序列晒個範圍，跨午夜都得', () => {
+    expect(hoursInRange(21, 4)).toEqual([21, 22, 23, 0, 1, 2, 3, 4])
+    expect(hoursInRange(6, 14)).toEqual([6, 7, 8, 9, 10, 11, 12, 13, 14])
+    expect(hoursInRange(0, 6)).toEqual([0, 1, 2, 3, 4, 5, 6])
+    expect(hoursInRange(5, 5)).toEqual([5])
   })
 
   it('rankingAgreements 數 6 組先後', () => {
