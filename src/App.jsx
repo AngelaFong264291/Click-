@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router'
 import LanguageToggle from './components/LanguageToggle.jsx'
 import { AuthProvider } from './firebase/AuthProvider.jsx'
@@ -8,7 +9,29 @@ import { useLanguage } from './i18n/useLanguage.js'
 import HomeScreen from './screens/HomeScreen.jsx'
 import RoomScreen from './screens/RoomScreen.jsx'
 
+// Style guide 淨係 dev 用（`npm run dev`）：import.meta.env.DEV 喺 production build
+// 會變成 false，呢個分支連埋 lazy import 一齊俾 Vite 拎走，live 網站唔會有。
+const StyleGuideScreen = import.meta.env.DEV ? lazy(() => import('./screens/StyleGuideScreen.jsx')) : null
+
 function App() {
+  return (
+    <Routes>
+      {import.meta.env.DEV && (
+        <Route
+          path="/design"
+          element={
+            <Suspense fallback={null}>
+              <StyleGuideScreen />
+            </Suspense>
+          }
+        />
+      )}
+      <Route path="*" element={<MainApp />} />
+    </Routes>
+  )
+}
+
+function MainApp() {
   return (
     <>
       <header className="top-bar">

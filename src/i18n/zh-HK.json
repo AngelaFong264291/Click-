@@ -109,6 +109,68 @@
       "timesSuffix": "（{count} 次）"
     }
   },
+  "design": {
+    "pageTitle": "設計系統 · Style Guide",
+    "pageSubtitle": "大花紙 O'Camp —— 淨係 dev 見到，唔會出現喺 live 網站",
+    "devOnlyHint": "呢版淨係 npm run dev 先見到",
+    "hello": "HELLO",
+    "iAm": "我係",
+    "questionTypes": {
+      "choice": "選項題 · 四揀一",
+      "slider": "拉桿題 · 0 至 10 分",
+      "time": "時間題 · 揀一個鐘",
+      "matching": "配對題 · 3 配 3 · 15 秒",
+      "ranking": "排序題 · 拖拉排位",
+      "guess": "猜朋友題 · 估佢心水"
+    },
+    "sample": {
+      "choiceTheme": "主題：香港麵包 · 口味",
+      "choiceQuestion": "邊款麵包最似你返工嘅狀態？",
+      "sliderQuestion": "菠蘿包有幾性感？",
+      "timeTheme": "營地時間表 · 作息",
+      "timeQuestion": "打邊爐幾點最啱？",
+      "matchingQuestion": "用 marker 連線：邊樣配邊個形容詞？",
+      "rankingTheme": "價值觀",
+      "rankingQuestion": "由最浪漫排到最唔浪漫",
+      "guessQuestion": "如果困喺荒島，{name} 會帶邊款麵包？",
+      "options0": "菠蘿包",
+      "options1": "雞尾包",
+      "options2": "吞拿魚包",
+      "options3": "腸仔包",
+      "items0": "菠蘿包",
+      "items1": "港鐵",
+      "items2": "打風",
+      "adjectives0": "浪漫",
+      "adjectives1": "危險",
+      "adjectives2": "治癒",
+      "rankingItems0": "天星小輪",
+      "rankingItems1": "菠蘿包",
+      "rankingItems2": "打風",
+      "rankingItems3": "茶記奶茶"
+    },
+    "poster": {
+      "wanted": "通緝",
+      "guessing": "你估緊 {name}",
+      "explain": "{name} 自己照答佢心水，其他人估。估中人數 ÷ 其他人數 = 本題分。",
+      "myGuessHint": "我估佢揀呢個"
+    },
+    "certificate": {
+      "title": "獎　狀",
+      "names": "茲證明 {names}",
+      "subtitle": "十條題答完，全組默契分",
+      "pointsLabel": "分",
+      "awardedTitle": "特頒此稱號：",
+      "seal": "夾唔夾",
+      "sealSub": "營委會"
+    },
+    "clipboard": {
+      "rollCall": "點名紙",
+      "round": "ROLL CALL · 第 {round} 局"
+    },
+    "mindMeldStreak": "連續 {count} 題一樣",
+    "popupContinueHappy": "好嘢！繼續",
+    "popupContinueSad": "抹乾眼淚，繼續"
+  },
   "errors": {
     "nameRequired": "請填你個名",
     "nameTooLong": "名字最多 {max} 個字",

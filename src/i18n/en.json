@@ -109,6 +109,68 @@
       "timesSuffix": " ({count} times)"
     }
   },
+  "design": {
+    "pageTitle": "Design System · Style Guide",
+    "pageSubtitle": "O'Camp paper style — development only, never shipped to the live site",
+    "devOnlyHint": "Only visible under npm run dev",
+    "hello": "HELLO",
+    "iAm": "I'm",
+    "questionTypes": {
+      "choice": "Choice · pick one of four",
+      "slider": "Slider · 0 to 10",
+      "time": "Time · pick an hour",
+      "matching": "Matching · 3 pairs · 15s",
+      "ranking": "Ranking · drag to order",
+      "guess": "Guess-a-friend · their pick"
+    },
+    "sample": {
+      "choiceTheme": "Theme: Hong Kong breads · taste",
+      "choiceQuestion": "Which bread is most like you at work?",
+      "sliderQuestion": "How sexy is a pineapple bun?",
+      "timeTheme": "Camp schedule · daily rhythm",
+      "timeQuestion": "What's the best time for hot pot?",
+      "matchingQuestion": "Draw a marker line: which goes with which adjective?",
+      "rankingTheme": "Values",
+      "rankingQuestion": "Rank from most to least romantic",
+      "guessQuestion": "Stranded on a desert island, which bread would {name} bring?",
+      "options0": "Pineapple bun",
+      "options1": "Cocktail bun",
+      "options2": "Tuna mayo bun",
+      "options3": "Hot dog bun",
+      "items0": "Pineapple bun",
+      "items1": "The MTR",
+      "items2": "A typhoon",
+      "adjectives0": "Romantic",
+      "adjectives1": "Dangerous",
+      "adjectives2": "Healing",
+      "rankingItems0": "The Star Ferry",
+      "rankingItems1": "Pineapple bun",
+      "rankingItems2": "A typhoon",
+      "rankingItems3": "Cha chaan teng milk tea"
+    },
+    "poster": {
+      "wanted": "Wanted",
+      "guessing": "Guessing {name}'s pick",
+      "explain": "{name} answers for real; everyone else guesses. Correct guesses ÷ total guessers = this question's score.",
+      "myGuessHint": "My guess"
+    },
+    "certificate": {
+      "title": "Certificate",
+      "names": "This certifies that {names}",
+      "subtitle": "answered all ten questions. Group Click Score:",
+      "pointsLabel": "pts",
+      "awardedTitle": "Awarded the title:",
+      "seal": "Do We Click?",
+      "sealSub": "Camp Committee"
+    },
+    "clipboard": {
+      "rollCall": "Roll Call",
+      "round": "ROLL CALL · Round {round}"
+    },
+    "mindMeldStreak": "Matched {count} questions in a row",
+    "popupContinueHappy": "Nice! Continue",
+    "popupContinueSad": "Wipe tears, continue"
+  },
   "errors": {
     "nameRequired": "Please enter your name",
     "nameTooLong": "Names can be up to {max} characters",

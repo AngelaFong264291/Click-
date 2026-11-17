@@ -1,0 +1,121 @@
+/*
+ * 設計 tokens，由 docs/design/ocamp-design.html 抽出（階段 6）。
+ * 命名跟用途，唔跟顏色本身，方便日後换皮膚都唔使改 component。
+ * 淨係俾新 design-system component / style guide 用，唔影響現有畫面（階段 7 先套用）。
+ */
+:root {
+  /* ── 底色（大花紙 O'Camp） ── */
+  --color-paper: #f5efe0;
+  --color-paper-white: #fffdf6;
+  --color-cardstock: #e3d3b4;
+  --color-whiteboard: #fcfcfa;
+  --color-whiteboard-frame: #b9bcc0;
+  --color-ink: #1d1b18;
+  --color-ink-muted: #4a453d;
+  --color-highlight: #ffe94d;
+  --color-question-text: #1f4fb5;
+  --color-grading-red: #c8321e;
+  --color-tape: rgba(255, 232, 140, 0.85);
+  --color-tape-soft: rgba(255, 250, 220, 0.8);
+
+  /* ── 六個組色：玩家身份 + 題型標籤共用 ── */
+  --color-player-red: #e0442b;
+  --color-player-orange: #f08a1c;
+  --color-player-yellow: #f5cb2e;
+  --color-player-green: #2f9455;
+  --color-player-blue: #2d64c8;
+  --color-player-pink: #e86fa4;
+
+  /* 每隻組色配色設計本身已經定好嘅字色（大色塊／粗體用，已過 AA） */
+  --color-player-red-text: var(--color-paper-white);
+  --color-player-orange-text: var(--color-ink);
+  --color-player-yellow-text: var(--color-ink);
+  --color-player-green-text: var(--color-paper-white);
+  --color-player-blue-text: var(--color-paper-white);
+  --color-player-pink-text: var(--color-ink);
+
+  /* 細字（名牌縮寫、題型標籤呢類 <18.66px 粗體）用呢兩個：
+     紅、綠底配白字喺細字唔夠對比（4.10:1、3.76:1，未夠 4.5:1），
+     呢兩個係輕微調深嘅版本，啱啱好 4.5:1，大色塊／按鈕唔使用呢個，用返上面嗰隻。 */
+  --color-player-red-text-safe: #da3920;
+  --color-player-green-text-safe: #2a854d;
+
+  /* ── 默契排名畫面：最後一晚頒獎禮，暗色 ── */
+  --color-night-bg: #1e2a44;
+  --color-night-text: var(--color-paper);
+  --color-night-text-muted: #c9c3b2;
+
+  /* ── 單戀彈窗：另一種暗色 ── */
+  --color-onesided-bg: #2e3644;
+  --color-onesided-rain: #6b7a90;
+
+  /* ── 字體：得 3 個 family，對應 3 種用途 ── */
+  --font-hand: 'LXGW WenKai TC', 'Kaiti TC', 'STKaiti', 'BiauKai', serif;
+  --font-black: 'Noto Sans TC', 'PingFang HK', 'Microsoft JhengHei', sans-serif;
+  --font-marker: 'Permanent Marker', 'Noto Sans TC', sans-serif;
+  --font-weight-black: 900;
+  --font-weight-hand-bold: 700;
+
+  /* ── 字號（摘自設計稿實際用過嘅尺寸，按用途命名） ── */
+  --text-caption: 13px;
+  --text-body-sm: 14px;
+  --text-body: 15px;
+  --text-body-lg: 16px;
+  --text-label: 18px;
+  --text-subheading: 20px;
+  --text-heading-sm: 22px;
+  --text-heading: 24px;
+  --text-question: 29px;
+  --text-display-sm: 38px;
+  --text-display: 44px;
+  --text-score-md: 54px;
+  --text-score-lg: 58px;
+  --text-score-xl: 72px;
+  --text-hero: 92px;
+  --text-hero-lg: 108px;
+
+  /* ── 邊框 ── */
+  --border-thin: 2px solid var(--color-ink);
+  --border-regular: 2.5px solid var(--color-ink);
+  --border-thick: 3px solid var(--color-ink);
+  --border-dashed: 2px dashed var(--color-ink);
+  --border-dashed-muted: 2px dashed var(--color-ink-muted);
+  --border-whiteboard-frame: 7px solid var(--color-whiteboard-frame);
+  --border-whiteboard-outline: 2px solid var(--color-ink);
+
+  /* ── 陰影：一律實色偏移，冇 blur，html2canvas 安全 ── */
+  --shadow-sm: 2px 2px 0 var(--color-ink);
+  --shadow-md: 4px 4px 0 var(--color-ink);
+  --shadow-lg: 4px 5px 0 var(--color-ink);
+  --shadow-soft: 3px 4px 0 rgba(29, 27, 24, 0.35);
+
+  /* ── 歪少少嘅圓角（唔用統一圓角卡）：卡紙／按鈕兩種尺度，輪流用 ── */
+  --radius-card-a: 10px 4px 9px 5px / 5px 9px 4px 10px;
+  --radius-card-b: 4px 10px 5px 9px / 9px 5px 10px 4px;
+  --radius-card-c: 9px 5px 10px 4px / 4px 10px 5px 9px;
+  --radius-card-d: 5px 9px 4px 10px / 10px 4px 9px 5px;
+  --radius-button: 14px 5px 12px 6px / 6px 12px 5px 14px;
+  --radius-button-alt: 12px 5px 10px 4px / 5px 10px 4px 12px;
+  --radius-sticker: 12px;
+  --radius-pill: 50%;
+
+  /* ── 間距（4 嘅倍數，摘自設計稿） ── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 18px;
+  --space-6: 22px;
+
+  /* ── 觸控／動畫 ── */
+  --touch-target-min: 44px;
+  --duration-fast: 0.2s;
+  --duration-normal: 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0s;
+    --duration-normal: 0s;
+  }
+}

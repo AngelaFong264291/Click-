@@ -1,0 +1,1113 @@
+/*
+ * 階段 6 design-system component 樣式。淨係俾 src/components/design/* 同
+ * StyleGuideScreen 用；現有畫面（screens/*.jsx）完全唔 import 呢個檔，
+ * 所以依家冇改到任何現有畫面嘅外觀（階段 7 先套用）。
+ * 一律用 tokens.css 嘅 CSS variable，冇寫死顏色/字體。
+ */
+
+.ds-reset {
+  box-sizing: border-box;
+}
+.ds-reset * {
+  box-sizing: border-box;
+}
+
+/* ───────────────── 按鈕 ───────────────── */
+.ds-btn {
+  font-family: var(--font-black);
+  font-weight: var(--font-weight-black);
+  font-size: var(--text-heading-sm);
+  min-height: var(--touch-target-min);
+  padding: 0 var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: var(--radius-button);
+  transition: transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+  color: var(--color-ink);
+}
+
+.ds-btn--primary {
+  background: var(--color-highlight);
+  border: var(--border-thick);
+  box-shadow: var(--shadow-md);
+}
+
+.ds-btn--secondary {
+  background: var(--color-ink);
+  color: var(--color-paper-white);
+  border: 0;
+  border-radius: var(--radius-button-alt);
+}
+
+.ds-btn--outline {
+  background: transparent;
+  color: var(--color-night-text);
+  border: 2.5px solid var(--color-night-text);
+  box-shadow: none;
+  border-radius: var(--space-2);
+}
+
+.ds-btn--pressed {
+  transform: translate(2px, 3px);
+  box-shadow: none;
+}
+
+.ds-btn:disabled,
+.ds-btn--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.ds-btn-row {
+  display: flex;
+  gap: var(--space-3);
+}
+.ds-btn-row .ds-btn {
+  flex: 1;
+}
+
+/* ───────────────── 白板題卡 ───────────────── */
+.ds-whiteboard {
+  position: relative;
+  background: var(--color-whiteboard);
+  border: var(--border-whiteboard-frame);
+  outline: var(--border-whiteboard-outline);
+  outline-offset: 0;
+  border-radius: 4px;
+  padding: 34px var(--space-5) var(--space-5);
+  color: var(--color-ink);
+}
+
+.ds-whiteboard__tag {
+  position: absolute;
+  left: 14px;
+  top: -16px;
+  font-family: var(--font-black);
+  font-weight: var(--font-weight-black);
+  border: var(--border-regular);
+  padding: 3px var(--space-3);
+  font-size: var(--text-body-lg);
+  transform: rotate(-3deg);
+}
+
+.ds-whiteboard__theme {
+  font-size: var(--text-body-sm);
+  color: var(--color-ink-muted);
+}
+
+.ds-whiteboard__question {
+  font-family: var(--font-hand);
+  font-size: var(--text-question);
+  font-weight: 700;
+  color: var(--color-question-text);
+  line-height: 1.3;
+  margin-top: var(--space-2);
+}
+
+/* ───────────────── 卡紙條答案 ───────────────── */
+.ds-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 70px;
+  width: 100%;
+  padding: 0 var(--space-4);
+  background: var(--color-paper-white);
+  border: var(--border-thick);
+  border-radius: var(--radius-card-a);
+  font-family: var(--font-hand);
+  font-size: var(--text-heading-sm);
+  font-weight: 700;
+  color: var(--color-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.ds-option:nth-of-type(2) {
+  border-radius: var(--radius-card-b);
+}
+.ds-option:nth-of-type(3) {
+  border-radius: var(--radius-card-c);
+}
+.ds-option:nth-of-type(4) {
+  border-radius: var(--radius-card-d);
+}
+
+.ds-option--selected {
+  background: var(--color-highlight);
+  box-shadow: var(--shadow-md);
+  transform: rotate(-1deg);
+}
+
+.ds-option--consensus {
+  background: var(--color-highlight);
+  box-shadow: var(--shadow-md);
+}
+
+.ds-option--not-chosen {
+  opacity: 0.55;
+}
+
+.ds-option--disabled,
+.ds-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ds-option--timedout {
+  border-style: dashed;
+  opacity: 0.6;
+}
+
+.ds-option__badge {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-black);
+  font-size: var(--text-body-lg);
+  flex: none;
+}
+
+.ds-option__badge--filled {
+  background: var(--color-ink);
+  color: var(--color-highlight);
+}
+
+.ds-option__badge--outline {
+  border: var(--border-regular);
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.ds-option__label {
+  flex: 1;
+}
+
+.ds-option__check {
+  flex: none;
+}
+
+/* ───────────────── 拉桿（間尺） ───────────────── */
+.ds-slider {
+  position: relative;
+  height: 104px;
+}
+
+.ds-slider__bar {
+  position: absolute;
+  left: 0;
+  top: 30px;
+  right: 0;
+  height: 74px;
+  background: #e9c98b;
+  border: var(--border-thick);
+  border-radius: 4px;
+}
+
+.ds-slider__ticks {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  top: 33px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.ds-slider__tick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 0;
+}
+
+.ds-slider__tick-mark {
+  width: 2px;
+  height: 13px;
+  background: var(--color-ink);
+}
+.ds-slider__tick--major .ds-slider__tick-mark {
+  width: 2.5px;
+  height: 22px;
+}
+
+.ds-slider__tick-label {
+  font-family: var(--font-marker);
+  font-size: var(--text-body-lg);
+  margin-top: 15px;
+}
+.ds-slider__tick--major .ds-slider__tick-label {
+  margin-top: 6px;
+}
+.ds-slider__tick--active .ds-slider__tick-label {
+  color: var(--color-grading-red);
+  font-size: var(--text-label);
+}
+
+.ds-slider__fill {
+  position: absolute;
+  left: 22px;
+  top: 88px;
+  height: 9px;
+  background: var(--color-highlight);
+  border-radius: 4px;
+}
+
+.ds-slider__thumb {
+  position: absolute;
+  top: 0;
+  width: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.ds-slider__thumb-cap {
+  width: 30px;
+  height: 46px;
+  background: var(--color-player-red);
+  border: var(--border-thick);
+  border-radius: 8px 8px 4px 4px;
+}
+
+.ds-slider__thumb-nib {
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 14px solid var(--color-ink);
+}
+
+.ds-slider__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ds-slider__readout {
+  text-align: center;
+}
+.ds-slider__readout-value {
+  font-family: var(--font-marker);
+  font-size: var(--text-hero);
+  line-height: 1;
+}
+.ds-slider__readout-hint {
+  font-size: var(--text-body-sm);
+  color: var(--color-ink-muted);
+}
+
+/* ───────────────── 時間題：24 粒鐘面 / 彈性範圍弧形 ───────────────── */
+.ds-clock {
+  position: relative;
+  width: 330px;
+  height: 330px;
+  max-width: 100%;
+  aspect-ratio: 1;
+}
+
+.ds-clock__face {
+  position: absolute;
+  inset: 0;
+}
+
+.ds-clock__hand {
+  position: absolute;
+  inset: 0;
+}
+
+.ds-clock__btn {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-marker);
+  font-size: var(--text-body-lg);
+  cursor: pointer;
+  border: 2px solid var(--color-ink);
+  background: #e3e8f3;
+  color: var(--color-ink);
+  padding: 0;
+  transform: translate(-50%, -50%);
+}
+
+.ds-clock__btn--outer {
+  background: var(--color-paper-white);
+  border-width: 2.5px;
+}
+
+.ds-clock__btn--selected {
+  background: var(--color-highlight);
+  border: 3px solid var(--color-grading-red);
+  box-shadow: var(--shadow-sm);
+}
+
+.ds-clock__readout {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+.ds-clock__readout-value {
+  font-family: var(--font-marker);
+  font-size: var(--text-display-sm);
+  color: var(--color-grading-red);
+  line-height: 1;
+}
+
+/* 範圍弧形（跨午夜嗰種 5–10 粒掣）：唔係真鐘面位置，沿弧形排 */
+.ds-hour-arc {
+  position: relative;
+  height: 180px;
+  max-width: 100%;
+}
+
+.ds-hour-arc__btn {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  margin-left: -22px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-marker);
+  font-size: var(--text-body-lg);
+  cursor: pointer;
+  border: 2.5px solid var(--color-ink);
+  background: var(--color-paper-white);
+  color: var(--color-ink);
+  padding: 0;
+}
+
+.ds-hour-arc__btn--selected {
+  background: var(--color-highlight);
+  border: 3px solid var(--color-grading-red);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ───────────────── 配對題 ───────────────── */
+.ds-matching {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.ds-matching__column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.ds-matching__item {
+  min-height: 72px;
+  background: var(--color-paper-white);
+  border: var(--border-thick);
+  border-radius: var(--radius-card-a);
+  font-family: var(--font-hand);
+  font-size: var(--text-heading-sm);
+  font-weight: 700;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.ds-matching__item--adjective {
+  background: var(--color-cardstock);
+  border-radius: 4px;
+  font-family: var(--font-black);
+}
+
+.ds-matching__item--auto {
+  border-style: dashed;
+}
+
+/* ───────────────── 排序題：疊紙條 ───────────────── */
+.ds-ranking {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.ds-ranking__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ds-ranking__badge {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-pill);
+  border: var(--border-regular);
+  background: var(--color-paper);
+  font-family: var(--font-marker);
+  font-size: var(--text-subheading);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ds-ranking__strip {
+  flex: 1;
+  min-height: 70px;
+  background: var(--color-paper-white);
+  border: var(--border-thick);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-2) 0 var(--space-4);
+  gap: var(--space-2);
+}
+
+.ds-ranking__strip--active {
+  background: var(--color-highlight);
+  box-shadow: var(--shadow-soft);
+}
+
+.ds-ranking__label {
+  flex: 1;
+  font-size: var(--text-heading-sm);
+  font-weight: 700;
+}
+
+.ds-ranking__move {
+  width: var(--touch-target-min);
+  height: var(--touch-target-min);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.ds-ranking__move:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ───────────────── 猜朋友題 ───────────────── */
+.ds-guess {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.ds-guess__poster {
+  flex: none;
+  width: 130px;
+  background: #f2e3c0;
+  border: var(--border-thick);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: var(--space-2);
+  position: relative;
+}
+
+.ds-guess__pin {
+  position: absolute;
+  left: 50px;
+  top: -10px;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-pill);
+  background: var(--color-player-red);
+  border: var(--border-regular);
+}
+
+.ds-guess__mugshot {
+  width: 62px;
+  height: 62px;
+  border-radius: var(--radius-pill);
+  border: var(--border-thick);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-black);
+  font-size: var(--text-heading);
+  margin-top: var(--space-1);
+}
+
+.ds-guess__options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4) var(--space-3);
+}
+
+.ds-guess__option {
+  min-height: 84px;
+  background: var(--color-cardstock);
+  border: var(--border-thick);
+  border-radius: 4px;
+  font-family: var(--font-hand);
+  font-size: var(--text-heading-sm);
+  font-weight: 700;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.ds-guess__option--selected {
+  background: var(--color-highlight);
+  box-shadow: var(--shadow-md);
+}
+
+.ds-guess__option-hint {
+  display: block;
+  font-size: var(--text-caption);
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+/* ───────────────── 玩家名牌貼紙 ───────────────── */
+.ds-player-card {
+  position: relative;
+  background: var(--color-paper-white);
+  border: var(--border-thick);
+  border-radius: var(--radius-sticker);
+  overflow: hidden;
+}
+
+.ds-player-card__header {
+  padding: 6px var(--space-2) 4px;
+  text-align: center;
+}
+
+.ds-player-card__header-top {
+  font-family: var(--font-black);
+  font-size: var(--text-subheading);
+  letter-spacing: 2px;
+  line-height: 1;
+}
+.ds-player-card__header-sub {
+  font-size: var(--text-caption);
+}
+
+.ds-player-card__name {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-heading);
+  font-weight: 700;
+}
+
+.ds-player-card__you {
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+}
+
+.ds-player-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--font-black);
+  border: var(--border-regular);
+  padding: 3px var(--space-2);
+  font-size: var(--text-body-sm);
+}
+
+.ds-player-tag--left {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.ds-avatar {
+  width: 40px;
+  height: 40px;
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  border-radius: var(--radius-pill);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-black);
+  font-size: var(--text-body);
+  border: var(--border-regular);
+}
+
+.ds-avatar--answered {
+  color: var(--color-paper-white);
+}
+
+.ds-avatar--waiting {
+  border-style: dashed;
+  background: transparent;
+}
+
+.ds-host-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  transform: rotate(-8deg);
+}
+.ds-host-tag__label {
+  font-family: var(--font-black);
+  font-size: var(--text-caption);
+  background: var(--color-player-yellow);
+  border: var(--border-thin);
+  padding: 1px 6px;
+}
+
+/* ───────────────── 倒數 / 溫度計 ───────────────── */
+.ds-countdown {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.ds-countdown__ring {
+  position: relative;
+  width: 58px;
+  height: 58px;
+}
+
+.ds-countdown__value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-marker);
+  font-size: var(--text-heading-sm);
+}
+
+.ds-thermo-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-body-sm);
+  color: var(--color-ink-muted);
+}
+
+.ds-thermo-bar__tag {
+  font-family: var(--font-black);
+  background: var(--color-ink);
+  color: var(--color-paper-white);
+  font-size: var(--text-caption);
+  padding: 2px var(--space-2);
+}
+
+.ds-thermo-bar__value {
+  font-family: var(--font-marker);
+  color: var(--color-ink);
+  font-size: var(--text-label);
+}
+
+.ds-thermo-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: #26302a;
+  border: var(--border-thick);
+  border-radius: 6px;
+  padding: 0 var(--space-4);
+  min-height: 92px;
+  color: #f3f1e8;
+}
+
+.ds-thermo-box__label {
+  flex: 1;
+}
+.ds-thermo-box__title {
+  font-family: var(--font-black);
+  font-size: var(--text-body);
+  letter-spacing: 1px;
+}
+.ds-thermo-box__caption {
+  font-size: var(--text-caption);
+  color: #c9d0c8;
+}
+
+.ds-thermo-box__digits {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.ds-thermo-box__digit {
+  width: 40px;
+  height: 56px;
+  background: #f3f1e8;
+  color: var(--color-ink);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-marker);
+  font-size: var(--text-display-sm);
+}
+
+/* ───────────────── 房號／分享連結：點名紙 ───────────────── */
+.ds-roomcode-card {
+  position: relative;
+  background: var(--color-paper-white);
+  border: var(--border-thick);
+  border-radius: 6px;
+  padding: var(--space-6) var(--space-4) var(--space-4);
+}
+
+.ds-roomcode-card__heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: var(--border-thin);
+  padding-bottom: var(--space-2);
+}
+
+.ds-roomcode-card__value {
+  font-family: var(--font-marker);
+  font-size: var(--text-score-md);
+  letter-spacing: 6px;
+  color: var(--color-player-blue);
+}
+
+.ds-roomcode-card__link-row {
+  margin-top: var(--space-3);
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.ds-roomcode-card__link {
+  flex: 1;
+  min-width: 0;
+  height: 46px;
+  border: var(--border-dashed);
+  border-radius: var(--space-2);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  font-size: var(--text-body);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ds-code-input {
+  width: 66px;
+  height: 70px;
+  border: var(--border-thick);
+  background: var(--color-paper-white);
+  font-family: var(--font-marker);
+  font-size: var(--text-display-sm);
+  text-align: center;
+  color: var(--color-player-blue);
+}
+
+/* ───────────────── 心靈相通 便利貼 ───────────────── */
+.ds-sticky-note {
+  position: relative;
+  background: #f9a8c9;
+  border: var(--border-regular);
+  padding: var(--space-3) 14px;
+  box-shadow: var(--shadow-soft);
+}
+
+.ds-sticky-note__title {
+  font-family: var(--font-black);
+  font-size: var(--text-heading);
+  line-height: 1.1;
+}
+
+/* ───────────────── 全屏彈窗 ───────────────── */
+.ds-popup {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+}
+
+.ds-popup--mutual {
+  background: #ffe36b;
+  color: var(--color-ink);
+}
+
+.ds-popup--onesided {
+  background: var(--color-onesided-bg);
+  color: var(--color-night-text);
+}
+
+.ds-popup__eyebrow {
+  font-size: var(--text-label);
+}
+
+.ds-popup__title--mutual {
+  font-family: var(--font-black);
+  font-size: var(--text-hero);
+  line-height: 1.02;
+  margin-top: var(--space-3);
+  color: var(--color-player-red);
+  text-shadow: 4px 4px 0 var(--color-ink);
+}
+
+.ds-popup__title--onesided {
+  font-family: var(--font-black);
+  font-size: var(--text-hero-lg);
+  line-height: 1.05;
+  margin-top: var(--space-2);
+  color: var(--color-paper-white);
+  text-shadow: 5px 5px 0 var(--color-player-blue);
+}
+
+.ds-popup__pair {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.ds-popup__score-card {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-paper-white);
+  color: var(--color-ink);
+  border: var(--border-thick);
+  padding: var(--space-3) var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.ds-popup__score-value {
+  font-family: var(--font-marker);
+  font-size: var(--text-score-lg);
+  line-height: 1;
+}
+
+/* ───────────────── 獎項 / 獎狀 / 大頭貼 ───────────────── */
+.ds-award-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--color-paper-white);
+  border: var(--border-regular);
+  padding: var(--space-2) var(--space-3);
+}
+
+.ds-award-row__label {
+  flex: none;
+  width: 92px;
+  text-align: center;
+  font-family: var(--font-black);
+  border: var(--border-thin);
+  padding: 3px 0;
+  font-size: var(--text-body);
+}
+
+.ds-award-row__winner {
+  flex: 1;
+  font-size: var(--text-label);
+  font-weight: 700;
+}
+
+.ds-award-row__stat {
+  font-family: var(--font-marker);
+  font-size: var(--text-heading-sm);
+}
+
+.ds-award-row__stat--caption {
+  font-family: var(--font-hand);
+  font-size: var(--text-body-sm);
+  color: var(--color-ink-muted);
+}
+
+.ds-certificate {
+  background: var(--color-paper-white);
+  border: var(--border-thick);
+  padding: var(--space-2);
+}
+
+.ds-certificate__inner {
+  border: 2px solid var(--color-grading-red);
+  outline: 1px solid var(--color-grading-red);
+  outline-offset: -6px;
+  padding: var(--space-4) var(--space-5);
+  position: relative;
+  text-align: center;
+}
+
+.ds-certificate__title {
+  font-family: var(--font-black);
+  font-size: var(--text-label);
+  letter-spacing: 10px;
+  color: var(--color-grading-red);
+}
+
+.ds-certificate__names {
+  font-size: var(--text-body-sm);
+  margin-top: var(--space-2);
+  color: var(--color-ink-muted);
+}
+
+.ds-certificate__score {
+  font-family: var(--font-marker);
+  font-size: var(--text-score-xl);
+  line-height: 1;
+}
+
+.ds-certificate__group-title {
+  font-family: var(--font-black);
+  display: inline-block;
+  font-size: var(--text-display-sm);
+  padding: 0 var(--space-3);
+  margin-top: 2px;
+  background: linear-gradient(transparent 58%, var(--color-highlight) 58%);
+}
+
+.ds-certificate__seal {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 70px;
+  height: 70px;
+  border: var(--border-thick);
+  border-color: var(--color-grading-red);
+  border-radius: var(--radius-pill);
+  color: var(--color-grading-red);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-14deg);
+  font-size: var(--text-caption);
+  line-height: 1.2;
+}
+
+.ds-polaroid {
+  width: 120px;
+  background: var(--color-paper-white);
+  border: var(--border-thin);
+  padding: var(--space-2) var(--space-2) 0;
+  box-shadow: var(--shadow-soft);
+}
+
+.ds-polaroid__photo {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-black);
+  font-size: var(--text-display-sm);
+}
+
+.ds-polaroid__name {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-label);
+  font-weight: 700;
+}
+
+/* ───────────────── Style guide 版面 ───────────────── */
+.ds-guide {
+  font-family: var(--font-hand);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  min-height: 100vh;
+  padding: var(--space-4);
+}
+
+.ds-guide__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.ds-guide__title {
+  font-family: var(--font-black);
+  font-size: var(--text-display-sm);
+}
+
+.ds-guide section {
+  margin-bottom: 40px;
+}
+
+.ds-guide h2 {
+  font-family: var(--font-black);
+  font-size: var(--text-heading);
+  margin: 0 0 var(--space-4);
+  border-bottom: var(--border-dashed-muted);
+  padding-bottom: var(--space-2);
+}
+
+.ds-guide h3 {
+  font-family: var(--font-black);
+  font-size: var(--text-label);
+  margin: var(--space-5) 0 var(--space-3);
+}
+
+.ds-guide__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-3);
+}
+
+.ds-guide__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.ds-swatch {
+  height: 64px;
+  border: var(--border-regular);
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-1) var(--space-2);
+  font-family: var(--font-black);
+  font-size: var(--text-body-sm);
+  font-weight: 700;
+}
+
+.ds-swatch-label {
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+  margin-top: 3px;
+}
+
+.ds-guide__dark {
+  background: var(--color-night-bg);
+  color: var(--color-night-text);
+  padding: var(--space-5);
+  border-radius: var(--space-2);
+}
+
+.ds-guide__darker {
+  background: var(--color-onesided-bg);
+  color: var(--color-night-text);
+  padding: var(--space-5);
+  border-radius: var(--space-2);
+}
