@@ -1,9 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
+import Button from '../components/design/Button.jsx'
+import { PlayerCard } from '../components/design/PlayerTag.jsx'
+import { RoomCodeCard } from '../components/design/RoomCodeBlock.jsx'
 import { onlinePlayerUids } from '../game/flow.js'
 import { MAX_PLAYERS, MIN_PLAYERS, canStart, sortedPlayers } from '../game/room.js'
 import { startGame } from '../firebase/rooms.js'
 import { useLanguage } from '../i18n/useLanguage.js'
 import { errorMessage } from './errorMessage.js'
+import { playerColorTextVar, playerColorVar } from './playerColor.js'
+
+const CARD_ROTATIONS = [-2, 1.5, -1.5, 2.5, -1, 1]
 
 function shareLinkFor(code) {
   return `${window.location.origin}${import.meta.env.BASE_URL}#/room/${code}`
@@ -16,6 +22,8 @@ export default function LobbyScreen({ code, room, uid, onLeave }) {
   const link = shareLinkFor(code)
   const [error, setError] = useState(null)
   const [starting, setStarting] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const copyResetRef = useRef(null)
 
   const onlineUids = onlinePlayerUids(room.players)
 
@@ -34,36 +42,45 @@ export default function LobbyScreen({ code, room, uid, onLeave }) {
     }
   }
 
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(link)
+      setCopied(true)
+      clearTimeout(copyResetRef.current)
+      copyResetRef.current = setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // 冇 clipboard 權限（例如非 https）：冇得自動複製，就唔做反應
+    }
+  }
+
+  useEffect(() => () => clearTimeout(copyResetRef.current), [])
+
   return (
     <main className="screen">
-      <p className="room-code">
-        {t('room.code')} <strong>{code}</strong>
-      </p>
+      <RoomCodeCard code={code} link={link} copied={copied} onCopy={handleCopy} t={t} />
 
-      <ShareLink link={link} />
-
-      <h2>{t('room.players', { count: players.length, max: MAX_PLAYERS })}</h2>
-      <ul className="player-list">
-        {players.map((p) => (
-          <li key={p.uid} className={p.online ? undefined : 'offline'}>
-            <span>{p.name}</span>
-            {p.uid === room.host && <span className="tag">{t('room.host')}</span>}
-            {p.uid === uid && <span className="tag">{t('room.you')}</span>}
-            {!p.online && <span className="tag muted">{t('room.offline')}</span>}
-          </li>
+      <h2 className="lobby-player-count">{t('room.players', { count: players.length, max: MAX_PLAYERS })}</h2>
+      <div className="lobby-player-grid">
+        {players.map((p, index) => (
+          <PlayerCard
+            key={p.uid}
+            name={p.name}
+            color={playerColorVar(room.players, p.uid)}
+            textColor={playerColorTextVar(room.players, p.uid)}
+            isHost={p.uid === room.host}
+            isYou={p.uid === uid}
+            offline={!p.online}
+            rotate={CARD_ROTATIONS[index % CARD_ROTATIONS.length]}
+            t={t}
+          />
         ))}
-      </ul>
+      </div>
 
       {isHost ? (
         <>
-          <button
-            type="button"
-            className="primary"
-            onClick={handleStart}
-            disabled={!canStart(room, uid) || starting}
-          >
+          <Button variant="primary" className="lobby-start" onClick={handleStart} disabled={!canStart(room, uid) || starting}>
             {t('room.start')}
-          </button>
+          </Button>
           {onlineUids.length < MIN_PLAYERS && <p className="hint">{t('room.needMore', { min: MIN_PLAYERS })}</p>}
         </>
       ) : (
@@ -76,43 +93,9 @@ export default function LobbyScreen({ code, room, uid, onLeave }) {
         </p>
       )}
 
-      <button type="button" onClick={onLeave}>
+      <Button variant="secondary" onClick={onLeave}>
         {t('room.leave')}
-      </button>
+      </Button>
     </main>
-  )
-}
-
-function ShareLink({ link }) {
-  const { t } = useLanguage()
-  const inputRef = useRef(null)
-  const [copied, setCopied] = useState(false)
-
-  useEffect(() => {
-    if (!copied) return undefined
-    const timer = setTimeout(() => setCopied(false), 2000)
-    return () => clearTimeout(timer)
-  }, [copied])
-
-  async function handleCopy() {
-    try {
-      await navigator.clipboard.writeText(link)
-      setCopied(true)
-    } catch {
-      // 冇 clipboard 權限（例如非 https）：揀晒段字俾玩家自己複製
-      inputRef.current?.select()
-    }
-  }
-
-  return (
-    <div className="share-row">
-      <label className="field">
-        <span>{t('room.shareLink')}</span>
-        <input ref={inputRef} type="text" value={link} readOnly onFocus={(e) => e.target.select()} />
-      </label>
-      <button type="button" onClick={handleCopy}>
-        {copied ? t('room.copied') : t('room.copy')}
-      </button>
-    </div>
   )
 }

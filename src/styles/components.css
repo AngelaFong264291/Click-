@@ -298,6 +298,10 @@
   cursor: pointer;
 }
 
+.ds-slider__input:disabled {
+  cursor: not-allowed;
+}
+
 .ds-slider__readout {
   text-align: center;
 }
@@ -357,6 +361,12 @@
   background: var(--color-highlight);
   border: 3px solid var(--color-grading-red);
   box-shadow: var(--shadow-sm);
+}
+
+.ds-clock__btn:disabled,
+.ds-hour-arc__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .ds-clock__readout {
@@ -433,6 +443,11 @@
   cursor: pointer;
 }
 
+.ds-matching__item--selected {
+  background: var(--color-highlight);
+  box-shadow: var(--shadow-sm);
+}
+
 .ds-matching__item--adjective {
   background: var(--color-cardstock);
   border-radius: 4px;
@@ -441,6 +456,11 @@
 
 .ds-matching__item--auto {
   border-style: dashed;
+}
+
+.ds-matching__item:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* ───────────────── 排序題：疊紙條 ───────────────── */
@@ -575,6 +595,11 @@
   box-shadow: var(--shadow-md);
 }
 
+.ds-guess__option:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .ds-guess__option-hint {
   display: block;
   font-size: var(--text-caption);
@@ -587,6 +612,10 @@
   position: relative;
   background: var(--color-paper-white);
   border: var(--border-thick);
+  border-radius: var(--radius-sticker);
+}
+
+.ds-player-card__inner {
   border-radius: var(--radius-sticker);
   overflow: hidden;
 }
@@ -619,6 +648,23 @@
   position: absolute;
   right: 6px;
   bottom: 4px;
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+}
+
+.ds-player-card--dimmed {
+  opacity: 0.6;
+}
+
+.ds-player-card__name--left {
+  text-decoration: line-through;
+}
+
+.ds-player-card__offline {
+  position: absolute;
+  left: 6px;
+  bottom: 4px;
+  font-family: var(--font-black);
   font-size: var(--text-caption);
   color: var(--color-ink-muted);
 }

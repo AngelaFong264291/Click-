@@ -71,6 +71,7 @@
     "waitingReveal": "Time is up. Waiting for the host to reveal…",
     "questionUnavailable": "This question is temporarily unavailable",
     "thermometerLabel": "Click-o-meter = average of {count} scored questions",
+    "thermometerTag": "Click-o-meter",
     "mindMeld": "{a} and {b} had a Mind Meld!",
     "soleOutlierBadge": "Repeat outlier",
     "unanimous": "Everyone agreed! 🎉",

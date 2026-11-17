@@ -71,6 +71,7 @@
     "waitingReveal": "作答時間已到，等房主揭曉…",
     "questionUnavailable": "暫時讀取唔到呢條題目",
     "thermometerLabel": "溫度計 = 已計分 {count} 題的平均",
+    "thermometerTag": "溫度計",
     "mindMeld": "{a} 同 {b} 心靈相通！",
     "soleOutlierBadge": "連續異類",
     "unanimous": "全場一致！🎉",

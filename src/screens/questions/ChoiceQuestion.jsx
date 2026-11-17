@@ -1,10 +1,18 @@
+import AnswerOption from '../../components/design/AnswerOption.jsx'
+
+const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
+
 export default function ChoiceQuestion({ question, language, disabled, onAnswer }) {
   return (
-    <div className="question-options">
-      {question.options.map((option) => (
-        <button key={option.id} type="button" disabled={disabled} onClick={() => onAnswer(option.id)}>
-          {option[language]}
-        </button>
+    <div className="stack">
+      {question.options.map((option, index) => (
+        <AnswerOption
+          key={option.id}
+          letter={LETTERS[index]}
+          label={option[language]}
+          disabled={disabled}
+          onClick={() => onAnswer(option.id)}
+        />
       ))}
     </div>
   )

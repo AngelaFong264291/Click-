@@ -1,3 +1,9 @@
+import AnswerOption from '../../components/design/AnswerOption.jsx'
+import Button from '../../components/design/Button.jsx'
+import RankingList from '../../components/design/RankingList.jsx'
+
+const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
+
 export default function RankingQuestion({ question, value, language, disabled, t, onChange, onSubmit }) {
   function toggleItem(itemId) {
     onChange(value.includes(itemId) ? value.filter((id) => id !== itemId) : [...value, itemId])
@@ -15,38 +21,34 @@ export default function RankingQuestion({ question, value, language, disabled, t
 
   return (
     <div className="stack">
-      <h3>{t('game.rankingSelect')}</h3>
-      <div className="question-options">
-        {question.options.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            aria-pressed={value.includes(item.id)}
-            disabled={disabled}
-            onClick={() => toggleItem(item.id)}
-          >
-            {value.includes(item.id) ? `${value.indexOf(item.id) + 1}. ` : ''}{item[language]}
-          </button>
-        ))}
+      <p className="hint">{t('game.rankingSelect')}</p>
+      <div className="stack">
+        {question.options.map((item, index) => {
+          const pickOrder = value.indexOf(item.id)
+          return (
+            <AnswerOption
+              key={item.id}
+              letter={pickOrder >= 0 ? String(pickOrder + 1) : LETTERS[index]}
+              label={item[language]}
+              state={pickOrder >= 0 ? 'selected' : 'default'}
+              disabled={disabled}
+              onClick={() => toggleItem(item.id)}
+            />
+          )
+        })}
       </div>
       {value.length > 0 && (
-        <ol className="ranking-list">
-          {value.map((id, index) => (
-            <li key={id}>
-              <span>{itemName(id)}</span>
-              <button type="button" aria-label={t('game.moveUp')} disabled={disabled || index === 0} onClick={() => moveItem(index, -1)}>
-                {t('game.moveUp')}
-              </button>
-              <button type="button" aria-label={t('game.moveDown')} disabled={disabled || index === value.length - 1} onClick={() => moveItem(index, 1)}>
-                {t('game.moveDown')}
-              </button>
-            </li>
-          ))}
-        </ol>
+        <RankingList
+          items={value.map(itemName)}
+          disabled={disabled}
+          onMoveUp={(index) => moveItem(index, -1)}
+          onMoveDown={(index) => moveItem(index, 1)}
+          t={t}
+        />
       )}
-      <button type="button" className="primary" disabled={disabled || value.length !== question.options.length} onClick={() => onSubmit(value)}>
+      <Button variant="primary" disabled={disabled || value.length !== question.options.length} onClick={() => onSubmit(value)}>
         {t('game.confirm')}
-      </button>
+      </Button>
     </div>
   )
 }

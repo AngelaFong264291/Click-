@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
+import Button from '../components/design/Button.jsx'
 import NameField from '../components/NameField.jsx'
 import { isMember, isValidRoomCode, joinError, nameError, normalizeName } from '../game/room.js'
 import { RoomError, joinRoom, leaveRoom } from '../firebase/rooms.js'
@@ -82,12 +83,12 @@ function JoinForm({ code, uid }) {
 
   return (
     <main className="screen">
-      <h1>{t('room.joinTitle', { code })}</h1>
+      <h1 className="home-title">{t('room.joinTitle', { code })}</h1>
       <form className="stack" onSubmit={handleSubmit}>
         <NameField value={name} onChange={setName} autoFocus />
-        <button type="submit" className="primary" disabled={busy}>
+        <Button type="submit" variant="primary" className="home-create" disabled={busy}>
           {busy ? t('home.joining') : t('home.join')}
-        </button>
+        </Button>
       </form>
       {error && (
         <p className="error" role="alert">
@@ -105,7 +106,7 @@ function RoomErrorScreen({ code }) {
       <p className="error" role="alert">
         {errorMessage(t, code)}
       </p>
-      <Link to="/">{t('common.backHome')}</Link>
+      <Link to="/" className="hint">{t('common.backHome')}</Link>
     </main>
   )
 }

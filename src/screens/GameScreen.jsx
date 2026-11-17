@@ -1,4 +1,10 @@
 import { useEffect, useEffectEvent, useRef, useState } from 'react'
+import Button from '../components/design/Button.jsx'
+import { Avatar, HostTag } from '../components/design/PlayerTag.jsx'
+import ClownSticker from '../components/design/ClownSticker.jsx'
+import { ThermometerBar } from '../components/design/Thermometer.jsx'
+import CountdownTimer from '../components/design/CountdownTimer.jsx'
+import WhiteboardCard from '../components/design/WhiteboardCard.jsx'
 import { scoreFormula } from '../game/formula.js'
 import { thermometer } from '../game/midgame.js'
 import {
@@ -16,9 +22,19 @@ import MatchingQuestion from './questions/MatchingQuestion.jsx'
 import RankingQuestion from './questions/RankingQuestion.jsx'
 import SliderQuestion from './questions/SliderQuestion.jsx'
 import TimeQuestion from './questions/TimeQuestion.jsx'
+import { playerColorVar } from './playerColor.js'
 import { usePrefersReducedMotion } from './usePrefersReducedMotion.js'
 
 const FLIP_STAGGER_MS = 250
+
+const QUESTION_TAG_COLOR = {
+  choice: 'var(--color-player-yellow)',
+  slider: 'var(--color-player-orange)',
+  time: 'var(--color-player-blue)',
+  matching: 'var(--color-player-pink)',
+  ranking: 'var(--color-player-green)',
+  guess: 'var(--color-player-red)',
+}
 
 function valueForDisplay(question, value, language, t) {
   if (value === undefined || value === null) return t('game.unanswered')
@@ -125,18 +141,21 @@ export default function GameScreen({ code, room, uid, onLeave }) {
     <main className="screen game-screen">
       <header className="game-header">
         <p>{t('game.questionProgress', { current: questionNumber, total: room.questions.length })}</p>
-        {room.phase === 'answering' && <Countdown room={room} serverNow={serverNow} t={t} />}
+        {room.phase === 'answering' && <Countdown room={room} serverNow={serverNow} question={question} t={t} />}
       </header>
 
-      <Thermometer value={thermometerValue} count={scoredCount} t={t} />
+      <ThermometerBar value={thermometerValue} count={scoredCount} t={t} />
 
-      {question.theme && <p className="hint">{t('game.themeLabel', { name: question.theme[language] })}</p>}
-
-      <h1>{
-        question.type === 'guess' && question.targetUid === uid
-          ? t('game.guessTargetPrompt')
-          : question.text[language].replace(/\{name\}/g, room.players?.[question.targetUid]?.name ?? '')
-      }</h1>
+      <WhiteboardCard
+        tagLabel={t(`design.questionTypes.${question.type}`)}
+        tagColor={QUESTION_TAG_COLOR[question.type]}
+        theme={question.theme ? t('game.themeLabel', { name: question.theme[language] }) : undefined}
+        question={
+          question.type === 'guess' && question.targetUid === uid
+            ? t('game.guessTargetPrompt')
+            : question.text[language].replace(/\{name\}/g, room.players?.[question.targetUid]?.name ?? '')
+        }
+      />
 
       {room.phase === 'answering' ? (
         <AnsweringPanel
@@ -184,37 +203,32 @@ export default function GameScreen({ code, room, uid, onLeave }) {
       )}
 
       <section aria-label={t('game.playerStatus')}>
-        <ul className="player-list">
+        <ul className="player-status-list">
           {players.map((player) => (
-            <li key={player.uid} className={player.online ? undefined : 'offline'}>
-              <span>{player.name}</span>
-              {player.uid === room.host && <span className="tag">{t('room.host')}</span>}
-              {player.left && <span className="tag muted">{t('game.left')}</span>}
-              {answers[player.uid] && <span className="tag" aria-label={t('game.answered')}>✓ {t('game.answered')}</span>}
-              {outlierUids.has(player.uid) && <span aria-label={t('game.soleOutlierBadge')}>🤡</span>}
+            <li key={player.uid} className="player-status-row">
+              <Avatar
+                initial={player.name.charAt(0)}
+                color={playerColorVar(room.players, player.uid)}
+                state={player.left ? 'left' : answers[player.uid] ? 'answered' : 'waiting'}
+              />
+              <span className="player-status-name">{player.name}</span>
+              {player.uid === room.host && <HostTag t={t} />}
+              {player.left && <span className="hint">{t('game.left')}</span>}
+              {answers[player.uid] && <span className="sr-only">{t('game.answered')}</span>}
+              {outlierUids.has(player.uid) && <ClownSticker size={20} label={t('game.soleOutlierBadge')} />}
             </li>
           ))}
         </ul>
       </section>
 
       {error && <p className="error" role="alert">{t(`errors.${error}`)}</p>}
-      <button type="button" onClick={onLeave}>{t('room.leave')}</button>
+      <Button variant="secondary" onClick={onLeave}>{t('room.leave')}</Button>
     </main>
   )
 }
 
 function plainAnswerValues(answers) {
   return Object.fromEntries(Object.entries(answers).map(([playerUid, answer]) => [playerUid, answer.value]))
-}
-
-function Thermometer({ value, count, t }) {
-  return (
-    <p className="hint" aria-label={t('game.thermometerLabel', { count })}>
-      {t('game.thermometerLabel', { count })}
-      {': '}
-      {value === null ? t('game.noScore') : value}
-    </p>
-  )
 }
 
 function RevealEvents({ events, players, reducedMotion, t }) {
@@ -234,12 +248,17 @@ function RevealEvents({ events, players, reducedMotion, t }) {
   )
 }
 
-function Countdown({ room, serverNow, t }) {
+function Countdown({ room, serverNow, question, t }) {
   if (serverNow === null || !Number.isFinite(room.deadline)) {
     return <p aria-live="polite">{t('common.loading')}</p>
   }
   const seconds = Math.max(0, Math.ceil((room.deadline - serverNow) / 1000))
-  return <p aria-live="off">{t('game.countdown', { seconds })}</p>
+  const total = Math.round(questionDurationMs(question.type) / 1000)
+  return (
+    <div aria-live="off">
+      <CountdownTimer seconds={seconds} total={total} label={t('game.countdown', { seconds })} />
+    </div>
+  )
 }
 
 function AnsweringPanel({ code, room, question, answers, serverNow, uid, language, t }) {
@@ -287,6 +306,7 @@ function AnsweringPanel({ code, room, question, answers, serverNow, uid, languag
     question,
     value: draft,
     disabled: locked,
+    language,
     t,
     onChange: (value) => {
       setDraft(value)
@@ -311,6 +331,8 @@ function AnsweringPanel({ code, room, question, answers, serverNow, uid, languag
           question={question}
           language={language}
           disabled={locked}
+          targetName={room.players?.[question.targetUid]?.name}
+          targetColor={playerColorVar(room.players, question.targetUid)}
           onAnswer={sendAnswer}
         />
       )}

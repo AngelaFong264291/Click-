@@ -1,11 +1,14 @@
-export default function GuessQuestion({ question, language, disabled, onAnswer }) {
+import GuessLayout from '../../components/design/GuessLayout.jsx'
+
+export default function GuessQuestion({ question, language, disabled, targetName, targetColor, onAnswer }) {
   return (
-    <div className="question-options">
-      {question.options.map((option) => (
-        <button key={option.id} type="button" disabled={disabled} onClick={() => onAnswer(option.id)}>
-          {option[language]}
-        </button>
-      ))}
-    </div>
+    <GuessLayout
+      targetName={targetName}
+      targetInitial={targetName?.charAt(0)}
+      targetColor={targetColor}
+      options={question.options.map((option) => option[language])}
+      disabled={disabled}
+      onSelect={(index) => onAnswer(question.options[index].id)}
+    />
   )
 }

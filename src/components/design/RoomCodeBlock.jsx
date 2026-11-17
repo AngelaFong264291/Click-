@@ -1,23 +1,27 @@
 import Button from './Button.jsx'
 
 /** 大堂用嘅「點名紙」：房號 + 分享連結 + 複製掣。 */
-export function RoomCodeCard({ code, link, round, t }) {
+export function RoomCodeCard({ code, link, round, copied, onCopy, t }) {
   return (
     <div className="ds-roomcode-card">
       <div className="ds-roomcode-card__heading">
         <span style={{ fontFamily: 'var(--font-black)', fontSize: 'var(--text-heading-sm)' }}>
           {t ? t('room.code') : '點名紙'}
         </span>
-        <span style={{ fontSize: 'var(--text-body-sm)', color: 'var(--color-ink-muted)' }}>第 {round} 局</span>
+        {round !== undefined && (
+          <span style={{ fontSize: 'var(--text-body-sm)', color: 'var(--color-ink-muted)' }}>第 {round} 局</span>
+        )}
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginTop: 'var(--space-3)' }}>
-        <span style={{ fontSize: 'var(--text-body-lg)' }}>{t ? t('room.shareLink') : '房號'}</span>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 'var(--space-3)' }}>
         <span className="ds-roomcode-card__value">{code}</span>
+      </div>
+      <div style={{ fontSize: 'var(--text-body-sm)', color: 'var(--color-ink-muted)', marginTop: 'var(--space-3)' }}>
+        {t ? t('room.shareLink') : '分享連結'}
       </div>
       <div className="ds-roomcode-card__link-row">
         <div className="ds-roomcode-card__link">{link}</div>
-        <Button variant="secondary" style={{ height: 46, padding: '0 14px', fontSize: 'var(--text-body-lg)' }}>
-          {t ? t('room.copy') : '複製 link'}
+        <Button variant="secondary" style={{ height: 46, padding: '0 14px', fontSize: 'var(--text-body-lg)' }} onClick={onCopy}>
+          {copied ? (t ? t('room.copied') : '複製咗！') : t ? t('room.copy') : '複製 link'}
         </Button>
       </div>
     </div>

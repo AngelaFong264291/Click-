@@ -3,15 +3,15 @@
 const FULL_DAY = Array.from({ length: 24 }, (_, i) => i)
 const isFullClock = (hours) => hours.length === 24 && hours.every((h, i) => h === i)
 
-export default function HourPicker({ hours = FULL_DAY, selected, onSelect }) {
+export default function HourPicker({ hours = FULL_DAY, selected, disabled, onSelect }) {
   return isFullClock(hours) ? (
-    <ClockFace hours={hours} selected={selected} onSelect={onSelect} />
+    <ClockFace hours={hours} selected={selected} disabled={disabled} onSelect={onSelect} />
   ) : (
-    <HourArc hours={hours} selected={selected} onSelect={onSelect} />
+    <HourArc hours={hours} selected={selected} disabled={disabled} onSelect={onSelect} />
   )
 }
 
-function ClockFace({ hours, selected, onSelect }) {
+function ClockFace({ hours, selected, disabled, onSelect }) {
   const CX = 50
   const CY = 50
   const R_INNER = 27
@@ -50,6 +50,7 @@ function ClockFace({ hours, selected, onSelect }) {
           <button
             key={h}
             type="button"
+            disabled={disabled}
             aria-pressed={selected === h}
             aria-label={`${h}:00`}
             className={`ds-clock__btn${h >= 12 ? ' ds-clock__btn--outer' : ''}${selected === h ? ' ds-clock__btn--selected' : ''}`}
@@ -74,7 +75,7 @@ function angleFor(h) {
   return ((-90 + (h12 / 12) * 360) * Math.PI) / 180
 }
 
-function HourArc({ hours, selected, onSelect }) {
+function HourArc({ hours, selected, disabled, onSelect }) {
   const n = hours.length
   const arcHeight = 46
   return (
@@ -87,6 +88,7 @@ function HourArc({ hours, selected, onSelect }) {
           <button
             key={h}
             type="button"
+            disabled={disabled}
             aria-pressed={selected === h}
             aria-label={`${h}:00`}
             className={`ds-hour-arc__btn${selected === h ? ' ds-hour-arc__btn--selected' : ''}`}

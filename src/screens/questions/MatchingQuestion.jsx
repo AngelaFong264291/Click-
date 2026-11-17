@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import Button from '../../components/design/Button.jsx'
+import MatchingLines from '../../components/design/MatchingLines.jsx'
 
 export default function MatchingQuestion({ question, value, language, disabled, t, onChange, onSubmit }) {
   const [selectedItem, setSelectedItem] = useState(null)
@@ -34,40 +36,34 @@ export default function MatchingQuestion({ question, value, language, disabled, 
     setSelectedItem(null)
   }
 
+  const itemIds = question.options.map((item) => item.id)
+  const adjectiveIds = question.adjectives.map((adjective) => adjective.id)
+  const connections = Object.entries(value).map(([itemId, adjectiveId]) => ({
+    itemIndex: itemIds.indexOf(itemId),
+    adjectiveIndex: adjectiveIds.indexOf(adjectiveId),
+  }))
+  const selectedItemIndex = selectedItem ? itemIds.indexOf(selectedItem) : undefined
+
+  function handlePick(kind, index) {
+    if (kind === 'item') chooseItem(itemIds[index])
+    else chooseAdjective(adjectiveIds[index])
+  }
+
   return (
     <div className="stack">
-      <div className="matching-columns">
-        <div className="stack" role="group" aria-label={t('game.items')}>
-          {question.options.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              aria-pressed={selectedItem === item.id}
-              disabled={disabled}
-              onClick={() => chooseItem(item.id)}
-            >
-              {item[language]}
-              {value[item.id] && <span> → {question.adjectives.find((adj) => adj.id === value[item.id])?.[language]}</span>}
-            </button>
-          ))}
-        </div>
-        <div className="stack" role="group" aria-label={t('game.adjectives')}>
-          {question.adjectives.map((adjective) => (
-            <button
-              key={adjective.id}
-              type="button"
-              aria-pressed={Object.values(value).includes(adjective.id)}
-              disabled={disabled}
-              onClick={() => chooseAdjective(adjective.id)}
-            >
-              {adjective[language]}
-            </button>
-          ))}
-        </div>
-      </div>
-      <button type="button" className="primary" disabled={disabled} onClick={() => onSubmit(value)}>
+      <MatchingLines
+        items={question.options.map((item) => item[language])}
+        adjectives={question.adjectives.map((adjective) => adjective[language])}
+        connections={connections}
+        selectedItemIndex={selectedItemIndex}
+        disabled={disabled}
+        itemsLabel={t('game.items')}
+        adjectivesLabel={t('game.adjectives')}
+        onPick={handlePick}
+      />
+      <Button variant="primary" disabled={disabled} onClick={() => onSubmit(value)}>
         {t('game.confirm')}
-      </button>
+      </Button>
     </div>
   )
 }

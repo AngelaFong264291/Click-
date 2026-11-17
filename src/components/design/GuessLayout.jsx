@@ -1,5 +1,5 @@
 // 猜朋友題：通緝令（估緊邊個）+ 2x2 答案格。
-export default function GuessLayout({ targetName, targetInitial, targetColor, options, selectedIndex, hintLabel, onSelect }) {
+export default function GuessLayout({ targetName, targetInitial, targetColor, options, selectedIndex, hintLabel, disabled, onSelect }) {
   return (
     <div className="ds-guess">
       <div className="ds-guess__poster">
@@ -15,6 +15,7 @@ export default function GuessLayout({ targetName, targetInitial, targetColor, op
           <button
             key={label}
             type="button"
+            disabled={disabled}
             className={`ds-guess__option${index === selectedIndex ? ' ds-guess__option--selected' : ''}`}
             aria-pressed={index === selectedIndex}
             onClick={() => onSelect?.(index)}

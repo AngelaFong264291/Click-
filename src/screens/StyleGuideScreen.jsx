@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import '../styles/tokens.css'
-import '../styles/components.css'
 import LanguageToggle from '../components/LanguageToggle.jsx'
 import AwardCertificate from '../components/design/AwardCertificate.jsx'
 import AwardRow from '../components/design/AwardRow.jsx'

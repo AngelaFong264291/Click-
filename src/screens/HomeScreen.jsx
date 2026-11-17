@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
+import Button from '../components/design/Button.jsx'
 import NameField from '../components/NameField.jsx'
 import { ROOM_CODE_LENGTH, isValidRoomCode, nameError, normalizeName } from '../game/room.js'
 import { RoomError, createRoom, joinRoom } from '../firebase/rooms.js'
@@ -65,14 +66,14 @@ export default function HomeScreen() {
   }
 
   return (
-    <main className="screen">
-      <h1>{t('app.title')}</h1>
+    <main className="screen home-screen">
+      <h1 className="home-title">{t('app.title')}</h1>
 
       <NameField value={name} onChange={setName} />
 
-      <button type="button" className="primary" onClick={handleCreate} disabled={busy !== null}>
+      <Button variant="primary" className="home-create" onClick={handleCreate} disabled={busy !== null}>
         {busy === 'create' ? t('home.creating') : t('home.create')}
-      </button>
+      </Button>
 
       <p className="divider">{t('home.or')}</p>
 
@@ -83,15 +84,16 @@ export default function HomeScreen() {
             type="text"
             inputMode="numeric"
             pattern="[0-9]*"
+            className="home-code-input"
             value={code}
             onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, ROOM_CODE_LENGTH))}
             placeholder={t('home.codePlaceholder')}
             autoComplete="off"
           />
         </label>
-        <button type="submit" disabled={busy !== null}>
+        <Button type="submit" variant="secondary" disabled={busy !== null}>
           {busy === 'join' ? t('home.joining') : t('home.join')}
-        </button>
+        </Button>
       </form>
 
       {error && (

@@ -1,26 +1,22 @@
-export default function SliderQuestion({ value, disabled, t, onChange, onSubmit }) {
+import Button from '../../components/design/Button.jsx'
+import SliderControl from '../../components/design/SliderControl.jsx'
+
+export default function SliderQuestion({ question, value, disabled, language, t, onChange, onSubmit }) {
   const selected = value ?? 5
+  const labels = question.sliderLabels?.[language]
+
+  // 撳落拉桿（就算冇真係拖動）都當「有互動」，timeout 先可以自動帶走呢個值。
+  function markInteracted() {
+    onChange(selected)
+  }
 
   return (
-    <div className="stack">
-      <label className="field">
-        <span>{t('game.sliderLabel')}</span>
-        <input
-          type="range"
-          min="0"
-          max="10"
-          step="1"
-          value={selected}
-          disabled={disabled}
-          onPointerDown={() => onChange(selected)}
-          onKeyDown={() => onChange(selected)}
-          onChange={(event) => onChange(Number(event.target.value))}
-        />
-      </label>
-      <output>{t('game.sliderValue', { value: selected })}</output>
-      <button type="button" className="primary" disabled={disabled} onClick={() => onSubmit(selected)}>
+    <div className="stack" onPointerDownCapture={markInteracted} onKeyDownCapture={markInteracted}>
+      <div className="slider-readout">{t('game.sliderValue', { value: selected })}</div>
+      <SliderControl value={selected} disabled={disabled} onChange={onChange} lowLabel={labels?.min?.[language]} highLabel={labels?.max?.[language]} t={t} />
+      <Button variant="primary" disabled={disabled} onClick={() => onSubmit(selected)}>
         {t('game.confirm')}
-      </button>
+      </Button>
       <span className="sr-only">{t('game.sliderRange')}</span>
     </div>
   )

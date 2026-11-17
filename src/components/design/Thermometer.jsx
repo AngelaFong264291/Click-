@@ -2,7 +2,7 @@
 export function ThermometerBar({ value, count, t }) {
   return (
     <div className="ds-thermo-bar">
-      <span className="ds-thermo-bar__tag">{t ? t('game.formula') : '計分板'}</span>
+      <span className="ds-thermo-bar__tag">{t ? t('game.thermometerTag') : '溫度計'}</span>
       <span>
         {t ? t('game.thermometerLabel', { count }) : `已計分 ${count} 題的平均`}{' '}
         <b className="ds-thermo-bar__value">{value ?? '—'}</b>

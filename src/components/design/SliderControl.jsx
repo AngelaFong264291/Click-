@@ -1,5 +1,5 @@
 // 拉桿題：木間尺 + marker 筆蓋拉桿 + 熒光筆填色。真正可操作嘅 <input type="range"> 蓋喺度，淨係隱形。
-export default function SliderControl({ min = 0, max = 10, value, onChange, lowLabel, highLabel, t }) {
+export default function SliderControl({ min = 0, max = 10, value, disabled, onChange, lowLabel, highLabel, t }) {
   const range = max - min
   const percent = ((value - min) / range) * 100
   const ticks = Array.from({ length: range + 1 }, (_, i) => min + i)
@@ -35,6 +35,7 @@ export default function SliderControl({ min = 0, max = 10, value, onChange, lowL
           max={max}
           step={1}
           value={value}
+          disabled={disabled}
           aria-label={t ? t('game.sliderLabel') : undefined}
           onChange={(e) => onChange(Number(e.target.value))}
         />

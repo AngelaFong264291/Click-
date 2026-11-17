@@ -1,6 +1,6 @@
 // 排序題：疊紙條 + 編號圓章。設計稿畫咗拖拉手指，但實際遊戲係撳個次序再用上/下掣調整
 // （同 src/screens/questions/RankingQuestion.jsx 一致），所以呢度用上/下掣，唔用拖拉手指。
-export default function RankingList({ items, activeIndex, onMoveUp, onMoveDown, t }) {
+export default function RankingList({ items, activeIndex, disabled, onMoveUp, onMoveDown, t }) {
   return (
     <div className="ds-ranking">
       {items.map((label, index) => (
@@ -11,7 +11,7 @@ export default function RankingList({ items, activeIndex, onMoveUp, onMoveDown, 
             <button
               type="button"
               className="ds-ranking__move"
-              disabled={index === 0}
+              disabled={disabled || index === 0}
               aria-label={t ? t('game.moveUp') : 'Move up'}
               onClick={() => onMoveUp?.(index)}
             >
@@ -20,7 +20,7 @@ export default function RankingList({ items, activeIndex, onMoveUp, onMoveDown, 
             <button
               type="button"
               className="ds-ranking__move"
-              disabled={index === items.length - 1}
+              disabled={disabled || index === items.length - 1}
               aria-label={t ? t('game.moveDown') : 'Move down'}
               onClick={() => onMoveDown?.(index)}
             >

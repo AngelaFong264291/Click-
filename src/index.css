@@ -1,61 +1,76 @@
-/* 基本 reset。設計 tokens 留待階段 6（src/styles/）。 */
+/* 基本 reset + 階段 7A 套用嘅全域排版。設計 tokens／component 喺 src/styles/。 */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
-  min-height: 100vh;
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
-  color: #1a1a1a;
-  background: #fff;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  font-family: var(--font-hand);
+  color: var(--color-ink);
+  background: var(--color-paper);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 .top-bar {
   display: flex;
   justify-content: flex-end;
-  padding: 16px;
+  padding: var(--space-3) var(--space-4);
 }
 
-.lang-toggle {
-  font: inherit;
-  padding: 6px 12px;
-  cursor: pointer;
-}
-
-/* 階段 1 嘅臨時排版，正式設計喺階段 6–7。 */
+/* 全域畫面容器：手機優先，窄到 360px 都啱。 */
 .screen {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-width: 420px;
+  gap: var(--space-4);
+  max-width: 480px;
   margin: 0 auto;
-  padding: 16px;
+  padding: var(--space-4);
 }
 
 .stack {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
   flex: 1;
   min-width: 0;
 }
 
-input,
-button {
+.field span {
+  font-family: var(--font-black);
+  font-size: var(--text-body-sm);
+  color: var(--color-ink-muted);
+}
+
+input {
   font: inherit;
-  padding: 8px 12px;
+  font-family: var(--font-marker);
+  padding: var(--space-2) var(--space-3);
+  min-height: var(--touch-target-min);
+  background: var(--color-paper-white);
+  border: var(--border-thick);
+  border-radius: 6px;
+  color: var(--color-ink);
 }
 
 button {
+  font: inherit;
   cursor: pointer;
 }
 
@@ -63,119 +78,105 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.primary {
-  font-weight: 600;
+.slider-readout {
+  text-align: center;
+  font-family: var(--font-marker);
+  font-size: var(--text-hero);
+  line-height: 1;
+}
+
+.lobby-player-count {
+  font-family: var(--font-black);
+  font-size: var(--text-heading-sm);
+  margin: 0;
+}
+
+.lobby-player-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-4) var(--space-3);
+  padding-top: var(--space-2);
+}
+
+.lobby-start {
+  width: 100%;
+}
+
+.home-title {
+  font-family: var(--font-black);
+  font-weight: var(--font-weight-black);
+  font-size: var(--text-display-sm);
+  margin: var(--space-4) 0 0;
+  text-align: center;
+}
+
+.home-create {
+  width: 100%;
+}
+
+.home-code-input {
+  width: 100%;
+  font-size: var(--text-heading-sm);
+  letter-spacing: 4px;
+  text-align: center;
 }
 
 .join-row,
 .share-row {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
   align-items: flex-end;
 }
 
 .divider,
 .hint {
   margin: 0;
-  color: #666;
+  font-size: var(--text-body-sm);
+  color: var(--color-ink-muted);
 }
 
 .error {
   margin: 0;
-  color: #b00020;
-}
-
-.room-code {
-  margin: 0;
-  font-size: 1.25rem;
-}
-
-.player-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.player-list li {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.player-list li.offline {
-  opacity: 0.5;
-}
-
-.tag {
-  font-size: 0.75rem;
-  padding: 2px 6px;
-  border: 1px solid currentColor;
-  border-radius: 4px;
-}
-
-.tag.muted {
-  color: #666;
+  font-family: var(--font-black);
+  font-weight: 700;
+  color: var(--color-grading-red);
 }
 
 .game-screen {
   max-width: 560px;
 }
 
-.game-header,
-.question-options,
-.matching-columns,
-.ranking-list,
-.answer-list,
-.time-grid {
-  display: grid;
-  gap: 8px;
-}
-
 .game-header {
-  grid-template-columns: 1fr auto;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  gap: var(--space-3);
 }
 
-.game-header p,
-.answer-list,
-.ranking-list {
+.game-header p {
   margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--color-ink-muted);
 }
 
-.question-options {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
-}
-
-.time-grid {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-}
-
-.time-grid button {
-  min-width: 0;
-  padding-inline: 4px;
-}
-
-.matching-columns {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.ranking-list li,
-.answer-list li {
+.player-status-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-3) var(--space-4);
+}
+
+.player-status-row {
+  display: flex;
   align-items: center;
+  gap: var(--space-2);
 }
 
-.answer-list li span {
-  overflow-wrap: anywhere;
-}
-
-.ranking-list li span {
-  flex: 1;
+.player-status-name {
+  font-family: var(--font-black);
+  font-size: var(--text-body-sm);
 }
 
 .reveal-answer {

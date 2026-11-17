@@ -1,19 +1,23 @@
 import ClownSticker from './ClownSticker.jsx'
 
-/** 大堂用嘅名牌貼紙卡（HELLO 我係 ___）。 */
-export function PlayerCard({ name, color, textColor, isHost, isYou, left, outlierBadge, rotate = 0, t }) {
+/** 大堂用嘅名牌貼紙卡（HELLO 我係 ___）。left：已離開（遊戲中途，淡化+刪除線）；offline：離線但未離開（大堂，淡化+標籤）。 */
+export function PlayerCard({ name, color, textColor, isHost, isYou, left, offline, outlierBadge, rotate = 0, t }) {
+  const dimmed = left || offline
   return (
-    <div className="ds-player-card" style={{ transform: `rotate(${rotate}deg)` }}>
-      <div className="ds-player-card__header" style={{ background: color, color: textColor }}>
-        <div className="ds-player-card__header-top">HELLO</div>
-        <div className="ds-player-card__header-sub">我係</div>
+    <div className={`ds-player-card${dimmed ? ' ds-player-card--dimmed' : ''}`} style={{ transform: `rotate(${rotate}deg)` }}>
+      <div className="ds-player-card__inner">
+        <div className="ds-player-card__header" style={{ background: color, color: textColor }}>
+          <div className="ds-player-card__header-top">HELLO</div>
+          <div className="ds-player-card__header-sub">我係</div>
+        </div>
+        <div className={`ds-player-card__name${left ? ' ds-player-card__name--left' : ''}`}>
+          {name}
+          {outlierBadge && <ClownSticker size={22} label={t ? t('game.soleOutlierBadge') : 'Repeat outlier'} />}
+        </div>
       </div>
-      <div className="ds-player-card__name" style={{ opacity: left ? 0.5 : 1 }}>
-        {name}
-        {outlierBadge && <ClownSticker size={22} label={t ? t('game.soleOutlierBadge') : 'Repeat outlier'} />}
-      </div>
-      {isHost && <HostTag t={t} style={{ position: 'absolute', left: 6, top: 6 }} />}
+      {isHost && <HostTag t={t} style={{ position: 'absolute', left: 4, top: -11 }} />}
       {isYou && <span className="ds-player-card__you">（{t ? t('room.you') : 'You'}）</span>}
+      {offline && !left && <span className="ds-player-card__offline">{t ? t('room.offline') : 'Offline'}</span>}
     </div>
   )
 }
