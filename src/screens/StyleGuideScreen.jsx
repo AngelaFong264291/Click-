@@ -348,7 +348,7 @@ export default function StyleGuideScreen() {
       <section>
         <h2>12. Results: awards, certificate, polaroid</h2>
         <div style={{ maxWidth: 400 }}>
-          <AwardCertificate names={['Kelvin', '阿珊', '阿明', '阿May']} score={78} scoreRange="70–89" titleText={t('results.titles.oldFriends')} roomCode="4827" date="2026.11.09" />
+          <AwardCertificate names={['Kelvin', '阿珊', '阿明', '阿May']} score={78} scoreRange="70–89" titleText={t('results.titles.oldFriends')} roomCode="4827" date="2026.11.09" t={t} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', marginTop: 'var(--space-4)', maxWidth: 400 }}>
           <AwardRow label={t('results.awards.bestMatch')} labelColor="var(--color-player-pink)" winner="阿珊 × Kelvin" stat={82} rotate={-0.8} />

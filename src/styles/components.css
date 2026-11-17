@@ -948,6 +948,12 @@
   line-height: 1;
 }
 
+.ds-popup__hint {
+  margin: var(--space-6) 0 0;
+  font-size: var(--text-body);
+  text-align: center;
+}
+
 /* ───────────────── 獎項 / 獎狀 / 大頭貼 ───────────────── */
 .ds-award-row {
   display: flex;
@@ -1071,6 +1077,71 @@
   justify-content: center;
   font-size: var(--text-label);
   font-weight: 700;
+}
+
+/* ───────────────── 揭曉：木牌答案 ───────────────── */
+.ds-reveal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+  gap: var(--space-5) var(--space-3);
+  padding-top: var(--space-2);
+}
+
+.ds-sign {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ds-sign__pole {
+  width: 3px;
+  height: 14px;
+  background: var(--color-ink-muted);
+}
+
+.ds-sign__card {
+  min-height: 56px;
+  width: 100%;
+  background: var(--color-paper-white);
+  border: var(--border-thick);
+  border-radius: var(--radius-card-a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-2) var(--space-1);
+  font-family: var(--font-hand);
+  font-weight: 700;
+  font-size: var(--text-body-sm);
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
+  transition: background-color var(--duration-normal) ease, border-color var(--duration-normal) ease;
+}
+
+.ds-sign__card--pending {
+  border-style: dashed;
+  border-color: var(--color-ink-muted);
+  background: transparent;
+}
+
+.ds-sign__name {
+  margin-top: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: 4px;
+  font-family: var(--font-black);
+  font-size: var(--text-caption);
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+}
+
+.ds-sign__name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ───────────────── Style guide 版面 ───────────────── */

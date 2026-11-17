@@ -2,7 +2,9 @@ import { useEffect, useEffectEvent, useRef, useState } from 'react'
 import Button from '../components/design/Button.jsx'
 import { Avatar, HostTag } from '../components/design/PlayerTag.jsx'
 import ClownSticker from '../components/design/ClownSticker.jsx'
-import { ThermometerBar } from '../components/design/Thermometer.jsx'
+import { MindMeldNote } from '../components/design/Popups.jsx'
+import RevealSign from '../components/design/RevealSign.jsx'
+import { ThermometerBar, ThermometerBox } from '../components/design/Thermometer.jsx'
 import CountdownTimer from '../components/design/CountdownTimer.jsx'
 import WhiteboardCard from '../components/design/WhiteboardCard.jsx'
 import { scoreFormula } from '../game/formula.js'
@@ -22,7 +24,7 @@ import MatchingQuestion from './questions/MatchingQuestion.jsx'
 import RankingQuestion from './questions/RankingQuestion.jsx'
 import SliderQuestion from './questions/SliderQuestion.jsx'
 import TimeQuestion from './questions/TimeQuestion.jsx'
-import { playerColorVar } from './playerColor.js'
+import { playerColorTextVar, playerColorVar } from './playerColor.js'
 import { usePrefersReducedMotion } from './usePrefersReducedMotion.js'
 
 const FLIP_STAGGER_MS = 250
@@ -131,9 +133,14 @@ export default function GameScreen({ code, room, uid, onLeave }) {
 
   const language = lang === 'zh-HK' ? 'zh' : 'en'
   const questionNumber = room.current + 1
-  const scoredValues = Object.values(scores).map((s) => (typeof s.score === 'number' ? s.score : null))
+  const scoreOf = (s) => (typeof s?.score === 'number' ? s.score : null)
+  const scoredValues = Object.values(scores).map(scoreOf)
   const thermometerValue = thermometer(scoredValues)
   const scoredCount = scoredValues.filter((v) => v !== null).length
+  const previousScoredValues = Object.entries(scores)
+    .filter(([index]) => Number(index) < room.current)
+    .map(([, s]) => scoreOf(s))
+  const previousThermometerValue = thermometer(previousScoredValues)
   const allRevealed = revealedCount >= players.length
   const outlierUids = new Set((scoreResult?.events?.outliers ?? []).map((o) => o.uid))
 
@@ -144,7 +151,11 @@ export default function GameScreen({ code, room, uid, onLeave }) {
         {room.phase === 'answering' && <Countdown room={room} serverNow={serverNow} question={question} t={t} />}
       </header>
 
-      <ThermometerBar value={thermometerValue} count={scoredCount} t={t} />
+      {room.phase === 'reveal' ? (
+        <ThermometerBox value={thermometerValue} count={scoredCount} t={t} />
+      ) : (
+        <ThermometerBar value={thermometerValue} count={scoredCount} t={t} />
+      )}
 
       <WhiteboardCard
         tagLabel={t(`design.questionTypes.${question.type}`)}
@@ -170,32 +181,39 @@ export default function GameScreen({ code, room, uid, onLeave }) {
           t={t}
         />
       ) : (
-        <section aria-labelledby="reveal-title">
-          <h2 id="reveal-title">{t('game.revealTitle')}</h2>
-          <ul className="answer-list">
+        <section aria-labelledby="reveal-title" className="stack">
+          <h2 id="reveal-title" className="sr-only">{t('game.revealTitle')}</h2>
+          <div className="ds-reveal-grid">
             {players.map((player, index) => (
-              <li
+              <RevealSign
                 key={player.uid}
-                className={`reveal-answer${index < revealedCount ? ' visible' : ''}`}
-              >
-                <strong>{player.name}</strong>
-                <span>{index < revealedCount ? valueForDisplay(question, answers[player.uid]?.value, language, t) : ''}</span>
-              </li>
+                name={player.name}
+                color={playerColorVar(room.players, player.uid)}
+                textColor={playerColorTextVar(room.players, player.uid)}
+                answer={valueForDisplay(question, answers[player.uid]?.value, language, t)}
+                revealed={index < revealedCount}
+                outlierBadge={outlierUids.has(player.uid)}
+                t={t}
+              />
             ))}
-          </ul>
+          </div>
 
           {allRevealed && scoreResult && (
             <>
-              <p>{t('game.questionScore', { score: scoreResult.score === null || scoreResult.score === undefined ? t('game.noScore') : scoreResult.score })}</p>
-              <p className="hint">{scoreFormula(question, plainAnswerValues(answers), scoreResult, t, language)}</p>
+              <RevealScore question={question} answers={answers} scoreResult={scoreResult} language={language} t={t} />
+              {previousThermometerValue !== null && (
+                <p className="reveal-thermo-change">
+                  {t('game.thermometerChange', { previous: previousThermometerValue, current: thermometerValue })}
+                </p>
+              )}
               <RevealEvents events={scoreResult.events} players={players} reducedMotion={reducedMotion} t={t} />
             </>
           )}
 
           {isHost ? (
-            <button type="button" className="primary" disabled={advancing || !allRevealed} onClick={handleNext}>
+            <Button variant="primary" disabled={advancing || !allRevealed} onClick={handleNext}>
               {t('game.next')}
-            </button>
+            </Button>
           ) : (
             <p className="hint">{t('game.waitingHost')}</p>
           )}
@@ -231,20 +249,34 @@ function plainAnswerValues(answers) {
   return Object.fromEntries(Object.entries(answers).map(([playerUid, answer]) => [playerUid, answer.value]))
 }
 
+/** 本題分數：有分就用 marker 紅字強調（0 分都係，因為都係計過嘅結果）；唔計分就淡化顯示。 */
+function RevealScore({ question, answers, scoreResult, language, t }) {
+  const formula = scoreFormula(question, plainAnswerValues(answers), scoreResult, t, language)
+  const doesntCount = scoreResult.score === null || scoreResult.score === undefined
+  return (
+    <div className="reveal-score">
+      {doesntCount ? (
+        <div className="reveal-score__value reveal-score__value--muted">{t('game.noScore')}</div>
+      ) : (
+        <div className="reveal-score__value">{scoreResult.score}</div>
+      )}
+      <p className={`reveal-formula${doesntCount ? ' reveal-formula--dashed' : ''}`}>{formula}</p>
+    </div>
+  )
+}
+
 function RevealEvents({ events, players, reducedMotion, t }) {
   if (!events) return null
   const nameOf = (uid) => players.find((p) => p.uid === uid)?.name ?? uid
   return (
-    <>
-      {(events.mindMeld ?? []).map(({ a, b }) => (
-        <p key={`${a}-${b}`} role="status">{t('game.mindMeld', { a: nameOf(a), b: nameOf(b) })}</p>
+    <div className="reveal-events">
+      {(events.mindMeld ?? []).map(({ a, b, streak }) => (
+        <MindMeldNote key={`${a}-${b}`} a={nameOf(a)} b={nameOf(b)} streak={streak} t={t} />
       ))}
       {events.fireworks && (
-        reducedMotion
-          ? <p role="status">{t('game.unanimous')}</p>
-          : <p role="status" className="fireworks">{t('game.unanimous')}</p>
+        <p role="status" className={`reveal-fireworks${reducedMotion ? '' : ' fireworks'}`}>{t('game.unanimous')}</p>
       )}
-    </>
+    </div>
   )
 }
 

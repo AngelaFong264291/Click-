@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { groupTitle, overallScore } from './overall.js'
+import { groupTitle, overallScore, scoreRangeFor } from './overall.js'
 
 describe('overallScore', () => {
   it('十題平均，跳過 null', () => {
@@ -38,5 +38,35 @@ describe('groupTitle', () => {
 
   it('分數係 null → null', () => {
     expect(groupTitle(null, 4)).toBe(null)
+  })
+})
+
+describe('scoreRangeFor', () => {
+  it('3 人或以上嘅每個稱號範圍，同 groupTitle 嘅門檻一致', () => {
+    expect(scoreRangeFor(4, 'soulmates')).toEqual({ min: 90, max: 100 })
+    expect(scoreRangeFor(4, 'oldFriends')).toEqual({ min: 70, max: 89 })
+    expect(scoreRangeFor(4, 'justFriends')).toEqual({ min: 40, max: 69 })
+    expect(scoreRangeFor(4, 'parallelUniverses')).toEqual({ min: 0, max: 39 })
+  })
+
+  it('兩人局用 95/75/45 門檻', () => {
+    expect(scoreRangeFor(2, 'soulmates')).toEqual({ min: 95, max: 100 })
+    expect(scoreRangeFor(2, 'oldFriends')).toEqual({ min: 75, max: 94 })
+    expect(scoreRangeFor(2, 'justFriends')).toEqual({ min: 45, max: 74 })
+    expect(scoreRangeFor(2, 'parallelUniverses')).toEqual({ min: 0, max: 44 })
+  })
+
+  it('範圍邊界同 groupTitle 嘅實際輸出對得上', () => {
+    for (const score of [100, 90, 89, 70, 69, 40, 39, 0]) {
+      const title = groupTitle(score, 4)
+      const range = scoreRangeFor(4, title)
+      expect(score).toBeGreaterThanOrEqual(range.min)
+      expect(score).toBeLessThanOrEqual(range.max)
+    }
+  })
+
+  it('唔識嘅 title 或者 null → null', () => {
+    expect(scoreRangeFor(4, null)).toBe(null)
+    expect(scoreRangeFor(4, 'notATitle')).toBe(null)
   })
 })

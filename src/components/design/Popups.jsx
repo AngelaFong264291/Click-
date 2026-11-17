@@ -9,7 +9,7 @@ export function MindMeldNote({ a, b, streak, rotate = 4, t }) {
       <div style={{ fontSize: 'var(--text-body)', marginTop: 'var(--space-1)' }}>
         {a} × {b}
         <br />
-        連續 {streak} 題一樣
+        {t ? t('design.mindMeldStreak', { count: streak }) : `連續 ${streak} 題一樣`}
       </div>
     </div>
   )
@@ -17,12 +17,13 @@ export function MindMeldNote({ a, b, streak, rotate = 4, t }) {
 
 /** 雙向奔赴：全屏黃色彩紙爆炸。 */
 export function MutualPopup({ nameA, colorA, textColorA, nameB, colorB, textColorB, score, t, onContinue, reducedMotion }) {
+  const tt = (key, vars) => (t ? t(key, vars) : key)
   return (
     <div className="ds-popup ds-popup--mutual">
       {!reducedMotion && <Confetti />}
       <div style={{ position: 'relative' }}>
-        <div className="ds-popup__eyebrow">你哋互相排咗對方第一</div>
-        <div className="ds-popup__title--mutual">{t ? t('results.mutualFirst') : '雙向奔赴！'}</div>
+        <div className="ds-popup__eyebrow">{tt('results.mutualEyebrow')}</div>
+        <div className="ds-popup__title--mutual">{tt('results.mutualFirst')}</div>
         <div className="ds-popup__pair">
           <PlayerCard name={nameA} color={colorA} textColor={textColorA} rotate={-6} t={t} />
           <ArrowsIcon />
@@ -31,13 +32,13 @@ export function MutualPopup({ nameA, colorA, textColorA, nameB, colorB, textColo
         <div className="ds-popup__score-card">
           <span className="ds-popup__score-value">{score}</span>
           <span style={{ fontSize: 'var(--text-body-lg)', lineHeight: 1.3 }}>
-            分
+            {tt('design.certificate.pointsLabel')}
             <br />
-            對分平均
+            {tt('results.pairScoreLabel')}
           </span>
         </div>
         <Button variant="secondary" style={{ width: '100%', marginTop: 'var(--space-6)' }} onClick={onContinue}>
-          好嘢！繼續
+          {tt('design.popupContinueHappy')}
         </Button>
       </div>
     </div>
@@ -46,23 +47,47 @@ export function MutualPopup({ nameA, colorA, textColorA, nameB, colorB, textColo
 
 /** 單戀：全屏暗色落雨。 */
 export function OneSidedPopup({ myName, theirName, theirColor, theirTextColor, t, onContinue, reducedMotion }) {
+  const tt = (key, vars) => (t ? t(key, vars) : key)
   return (
     <div className="ds-popup ds-popup--onesided">
       {!reducedMotion && <Rain />}
       <div style={{ position: 'relative' }}>
-        <div className="ds-popup__eyebrow">你排佢第一……</div>
-        <div className="ds-popup__title--onesided">{t ? t('results.oneSided') : '單戀'}</div>
-        <div className="ds-popup__eyebrow">佢排你最尾</div>
-        <div className="ds-popup__pair" style={{ marginTop: 'var(--space-6)' }}>
+        <div className="ds-popup__eyebrow">{tt('results.oneSidedEyebrowMine')}</div>
+        <div className="ds-popup__title--onesided">{tt('results.oneSided')}</div>
+        <div className="ds-popup__eyebrow">{tt('results.oneSidedEyebrowTheirs')}</div>
+        <BrokenHeartIcon />
+        <div className="ds-popup__pair">
           <PlayerCard name={myName} color="var(--color-player-green)" textColor="var(--color-paper-white)" rotate={-4} t={t} />
           <ArrowsIcon dim />
           <PlayerCard name={theirName} color={theirColor} textColor={theirTextColor} rotate={6} t={t} />
         </div>
-        <Button variant="secondary" style={{ width: '100%', marginTop: 'var(--space-6)' }} onClick={onContinue}>
-          抹乾眼淚，繼續
+        <p className="ds-popup__hint">{tt('results.oneSidedHint')}</p>
+        <Button variant="secondary" style={{ width: '100%', marginTop: 'var(--space-4)' }} onClick={onContinue}>
+          {tt('design.popupContinueSad')}
         </Button>
       </div>
     </div>
+  )
+}
+
+function BrokenHeartIcon() {
+  return (
+    <svg aria-hidden="true" width="64" height="58" viewBox="0 0 64 58" style={{ display: 'block', margin: 'var(--space-5) auto 0' }}>
+      <path
+        d="M32 52 C10 36 2 24 2 14 A12 12 0 0 1 24 7 L27 13 L21 20 L29 28 L24 38 L32 52 Z"
+        fill="var(--color-player-pink)"
+        stroke="var(--color-paper-white)"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M32 52 C54 36 62 24 62 14 A12 12 0 0 0 40 7 L37 13 L43 20 L35 28 L40 38 L32 52 Z"
+        fill="var(--color-player-pink)"
+        stroke="var(--color-paper-white)"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 }
 

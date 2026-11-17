@@ -21,7 +21,7 @@ export function ThermometerBox({ value, count, t }) {
         <circle cx="11" cy="53" r="8" fill="var(--color-player-red)" stroke="#f3f1e8" strokeWidth="2" />
       </svg>
       <div className="ds-thermo-box__label">
-        <div className="ds-thermo-box__title">默契溫度計</div>
+        <div className="ds-thermo-box__title">{t ? t('game.thermometerTag') : '溫度計'}</div>
         <div className="ds-thermo-box__caption">{t ? t('game.thermometerLabel', { count }) : `已計分 ${count} 題的平均`}</div>
       </div>
       <div className="ds-thermo-box__digits">
