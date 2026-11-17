@@ -27,10 +27,10 @@ npm run lint       # oxlint
 ## Deployment
 Site: https://doweclick.web.app (Firebase Hosting, project `doweclick`)
 
-Pushing to `main` auto-deploys: GitHub Actions (`.github/workflows/firebase-hosting-deploy.yml`) runs `npm ci` → `npm test` → `npm run build` → deploys to the Firebase Hosting live channel.
+Pushing to `main` auto-deploys: GitHub Actions (`.github/workflows/firebase-hosting-deploy.yml`) runs `npm ci` → `npm test` → `npm run test:rules` → `npm run build` → deploys `database.rules.json` to Realtime Database → deploys to the Firebase Hosting live channel. The rules deploy runs *before* hosting, so if it fails, hosting is skipped and the live site keeps running on its previous (working) rules instead of new code paired with rejecting rules.
 
 The GitHub repo needs these 8 Actions secrets:
 - `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_DATABASE_URL`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_STORAGE_BUCKET`, `VITE_FIREBASE_MESSAGING_SENDER_ID`, `VITE_FIREBASE_APP_ID` (same as `.env.local`)
 - `FIREBASE_SERVICE_ACCOUNT_DOWECLICK` (created via `npx firebase-tools init hosting:github`)
 
-Realtime Database security rules (`database.rules.json`) are not auto-deployed — they must be pasted manually into Firebase Console → Realtime Database → Rules.
+That same service account also needs the **Firebase Realtime Database Admin** IAM role (`roles/firebasedatabase.admin`) added manually, one time, in Google Cloud Console → IAM & Admin → IAM, so it's allowed to deploy database rules in addition to hosting.

@@ -12,8 +12,8 @@
 - **前端**：React + Vite，用 **JavaScript**，唔好轉 TypeScript
 - **即時同步**：Firebase Realtime Database
 - **玩家身份**：Firebase 匿名登入
-- **Firebase 設定**：config 由 `VITE_FIREBASE_*` env 讀（見 `.env.example`；本地放 `.env.local`，CI 用同名 GitHub secrets）。安全規則喺 `database.rules.json`，改完要人手貼去 Firebase Console → Realtime Database → Rules
-- **部署**：Firebase Hosting（project `doweclick`），live 網址 https://doweclick.web.app 。push 去 `main` 就由 `.github/workflows/firebase-hosting-deploy.yml` 自動 test、build、deploy 去 live channel（service account secret：`FIREBASE_SERVICE_ACCOUNT_DOWECLICK`）。`firebase.json` 只有 hosting（serve `dist/`），冇 database 設定，所以 deploy 唔會改到 console 嘅 rules。Vite `base` 用預設 `/`
+- **Firebase 設定**：config 由 `VITE_FIREBASE_*` env 讀（見 `.env.example`；本地放 `.env.local`，CI 用同名 GitHub secrets）。安全規則喺 `database.rules.json`，push 去 `main` 會自動 deploy（見下面「部署」），唔使再人手貼去 Firebase Console
+- **部署**：Firebase Hosting（project `doweclick`），live 網址 https://doweclick.web.app 。push 去 `main` 就由 `.github/workflows/firebase-hosting-deploy.yml` 自動跑 `npm test`、`npm run test:rules`、deploy database rules（`database.rules.json`）、再 deploy hosting（service account secret：`FIREBASE_SERVICE_ACCOUNT_DOWECLICK`，需要喺 GCP IAM 加咗 Firebase Realtime Database Admin 呢個 role）。Rules 要先 deploy 成功先至 deploy hosting，咁樣如果 rules 壞咗，live 網站唔會換上同新 rules 唔夾嘅新 code。Vite `base` 用預設 `/`
 - **本地開發**：`npm run dev` → http://localhost:5173/
 - **路由**：HashRouter。首頁 `/#/`，房間 `/#/room/:code`（例如 https://doweclick.web.app/#/room/1234 ）
 - **測試**：Vitest（`npm test`）。排錯：如果見到 `Cannot read properties of undefined (reading 'config')` 而一個測試都冇跑，通常係 terminal 用咗細楷 drive letter（`c:\`），Vitest load 咗兩份自己。用大楷路徑 `cd C:\...` 再跑就得
