@@ -169,4 +169,18 @@ describe('canStart', () => {
     expect(canStart(makeRoom({ status: 'playing' }), 'a')).toBe(false)
     expect(canStart(makeRoom({ players: manyPlayers(1), host: 'p0' }), 'p0')).toBe(false)
   })
+
+  it('離線或者已離開嘅玩家唔計入開始人數（Play again 之後舊局嘅離線玩家）', () => {
+    const room = makeRoom({
+      players: {
+        a: { name: 'A', joinedAt: 100, online: true },
+        b: { name: 'B', joinedAt: 200, online: false },
+        c: { name: 'C', joinedAt: 300, online: true, left: true },
+      },
+    })
+    expect(canStart(room, 'a')).toBe(false)
+    expect(
+      canStart({ ...room, players: { ...room.players, d: { name: 'D', joinedAt: 400, online: true } } }, 'a'),
+    ).toBe(true)
+  })
 })

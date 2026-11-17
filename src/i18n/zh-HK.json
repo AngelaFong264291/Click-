@@ -82,6 +82,33 @@
       "notEnoughAnswers": "呢題答嘅人唔夠，唔計分"
     }
   },
+  "results": {
+    "rankingTitle": "你嘅默契排名",
+    "twoPlayerScore": "你同 {name} 夾 {score} 分",
+    "twoPlayerNoData": "你同 {name} 未夾過，冇得計",
+    "noSharedData": "同 {name} 冇夾過",
+    "lastPlaceHint": "同 {name} 嘅默契仲有進步空間",
+    "rankRow": "{rank}. {name} — {score} 分",
+    "mutualFirst": "雙向奔赴！",
+    "oneSided": "單戀",
+    "seeResults": "睇結果",
+    "playAgain": "再玩一局",
+    "waitingPlayAgain": "等緊房主再開一局…",
+    "groupScoreLabel": "默契分",
+    "titles": {
+      "soulmates": "靈魂伴侶",
+      "oldFriends": "老友記",
+      "justFriends": "普通朋友",
+      "parallelUniverses": "平行宇宙"
+    },
+    "awards": {
+      "bestMatch": "最夾 CP",
+      "parallelLines": "平行線",
+      "soleOutlier": "永遠的異類",
+      "voiceOfPeople": "主流代表",
+      "timesSuffix": "（{count} 次）"
+    }
+  },
   "errors": {
     "nameRequired": "請填你個名",
     "nameTooLong": "名字最多 {max} 個字",

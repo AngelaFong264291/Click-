@@ -16,22 +16,9 @@ import MatchingQuestion from './questions/MatchingQuestion.jsx'
 import RankingQuestion from './questions/RankingQuestion.jsx'
 import SliderQuestion from './questions/SliderQuestion.jsx'
 import TimeQuestion from './questions/TimeQuestion.jsx'
+import { usePrefersReducedMotion } from './usePrefersReducedMotion.js'
 
 const FLIP_STAGGER_MS = 250
-
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true,
-  )
-  useEffect(() => {
-    const query = window.matchMedia?.('(prefers-reduced-motion: reduce)')
-    if (!query) return undefined
-    const onChange = () => setReduced(query.matches)
-    query.addEventListener('change', onChange)
-    return () => query.removeEventListener('change', onChange)
-  }, [])
-  return reduced
-}
 
 function valueForDisplay(question, value, language, t) {
   if (value === undefined || value === null) return t('game.unanswered')
@@ -114,7 +101,7 @@ export default function GameScreen({ code, room, uid, onLeave }) {
     setAdvancing(true)
     setError(null)
     try {
-      await advanceQuestion(code, room.current, room.questions[room.current + 1]?.type)
+      await advanceQuestion(code, room)
     } catch (error) {
       console.error('[GameScreen] Failed to advance question', {
         code: error?.code ?? error?.name,

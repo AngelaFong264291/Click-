@@ -15,6 +15,7 @@ import { generateRoomCode, isRoomStale, joinError, pickNextHost } from '../game/
 import { nextQuestionState, questionDeadline } from '../game/flow.js'
 import { generateQuestions } from '../game/generateQuestions.js'
 import { revealEvents } from '../game/midgame.js'
+import { buildResults } from '../game/results.js'
 import { scoreQuestion } from '../game/scoring.js'
 import { db } from './app.js'
 
@@ -187,13 +188,44 @@ export function revealQuestion(code, room) {
   })
 }
 
-export async function advanceQuestion(code, current, nextQuestionType) {
+/** room 要有 questions、answers、scores、players、current（即係 useRoom 嗰個 room 物件）。 */
+export async function advanceQuestion(code, room) {
+  const { current, questions, players } = room
   const next = nextQuestionState(current)
-  if (next.status === 'finished') return update(roomRef(code), next)
+  if (next.status === 'finished') {
+    const answersByQuestion = questions.map((_, index) => plainAnswers(room.answers?.[index]))
+    const scoresByQuestion = questions.map((_, index) => room.scores?.[index] ?? null)
+    const uids = Object.keys(players ?? {})
+    const results = buildResults({
+      questions,
+      answersByQuestion,
+      scoresByQuestion,
+      uids,
+      playerCount: uids.length,
+    })
+    return update(roomRef(code), { ...next, results })
+  }
   const now = await accurateServerNow()
   return update(roomRef(code), {
     ...next,
-    deadline: questionDeadline(now, nextQuestionType),
+    deadline: questionDeadline(now, questions[current + 1]?.type),
+  })
+}
+
+/**
+ * 再玩一局：重置返大堂，等房主可以用同一個房再開一局，唔使再分享連結。
+ * 唔刪玩家名單：離線／已離開嘅會繼續顯示離線，下次開始時唔計（見 room.js 嘅 canStart）。
+ */
+export function playAgain(code) {
+  return update(roomRef(code), {
+    status: 'lobby',
+    current: null,
+    phase: null,
+    deadline: null,
+    questions: null,
+    answers: null,
+    scores: null,
+    results: null,
   })
 }
 

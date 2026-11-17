@@ -16,7 +16,7 @@
 - **部署**：Firebase Hosting（project `doweclick`），live 網址 https://doweclick.web.app 。push 去 `main` 就由 `.github/workflows/firebase-hosting-deploy.yml` 自動跑 `npm test`、`npm run test:rules`、deploy database rules（`database.rules.json`）、再 deploy hosting（service account secret：`FIREBASE_SERVICE_ACCOUNT_DOWECLICK`，需要喺 GCP IAM 加咗 Firebase Realtime Database Admin 呢個 role）。Rules 要先 deploy 成功先至 deploy hosting，咁樣如果 rules 壞咗，live 網站唔會換上同新 rules 唔夾嘅新 code。Vite `base` 用預設 `/`
 - **本地開發**：`npm run dev` → http://localhost:5173/
 - **路由**：HashRouter。首頁 `/#/`，房間 `/#/room/:code`（例如 https://doweclick.web.app/#/room/1234 ）
-- **測試**：Vitest（`npm test`）。排錯：如果見到 `Cannot read properties of undefined (reading 'config')` 而一個測試都冇跑，通常係 terminal 用咗細楷 drive letter（`c:\`），Vitest load 咗兩份自己。用大楷路徑 `cd C:\...` 再跑就得
+- **測試**：Vitest（`npm test`）。安全規則測試用 Vitest + Firebase Emulator（`npm run test:rules`，需要本機有 JDK 21+）。排錯：如果見到 `Cannot read properties of undefined (reading 'config')` 而一個測試都冇跑，通常係 terminal 用咗細楷 drive letter（`c:\`），Vitest load 咗兩份自己。用大楷路徑 `cd C:\...` 再跑就得
 - **Lint**：保留 oxlint（`npm run lint`）
 - **介面語言**：自建 `t()` 加 `src/i18n/zh-HK.json`、`en.json`，唔好加大型 i18n 套件
 - **截圖**：html2canvas（階段 8）
@@ -28,11 +28,16 @@
 | 1 | Firebase、匿名登入、開房入房、大堂、host 移交、部署 Firebase Hosting |
 | 2 | 計分邏輯 + 測試 |
 | 3 | 詞庫格式 + 題目生成 |
-| 4 | 遊戲流程：作答、倒數、揭曉 |
+| 4A | 作答、倒數、題目推進 |
+| 4B | 揭曉、計分算式、溫度計、心靈相通、🤡、煙花 |
 | 5 | 默契排名、結果、稱號 |
 | 6 | Design tokens + 樣板頁 |
 | 7 | 套用設計到各畫面 |
 | 8 | 英文內容、分享圖、彈窗特效 |
+| 內容 | 正式題目內容（同以上階段分開進行） |
+
+## 同提案 v3 嘅已知差異
+- **秒答王已刪除**（階段 5 決定）：唔計呢個稱號，結果頁冇呢一項。答案仍然會記低 `ms`（作答毫秒），留俾將來可能用到。
 
 ## 工作規則
 1. **每次只做一個階段。** 做完就停，唔好自動開始下一個階段。
@@ -46,7 +51,7 @@
 - 語言只記喺自己裝置（localStorage），唔寫入房間狀態。預設跟瀏覽器語言，`zh*` 用繁中，其他用英文。
 - 答案存物件編號，唔存文字，所以中文玩家同英文玩家嘅答案可以直接比較。
 - 題目嘅 `text`、`options`、`adjectives` 以 `{zh, en}` 儲存。
-- 房主開局時一次過生成題目。所有畫面由房間嘅 `status` 同 `current` 控制，倒數只寫結束時間戳，房主離線用 `onDisconnect` 偵測並移交。
+- 房主開局時一次過生成題目，每題揭曉時由房主計分並寫入 `scores`。所有畫面由房間嘅 `status`、`current` 同 `phase` 控制，倒數只寫結束時間戳，房主離線用 `onDisconnect` 偵測並移交。
 
 ## 結構
 ```

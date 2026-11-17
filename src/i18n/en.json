@@ -82,6 +82,33 @@
       "notEnoughAnswers": "Not enough people answered, so this question doesn't count."
     }
   },
+  "results": {
+    "rankingTitle": "Your compatibility ranking",
+    "twoPlayerScore": "You and {name} click at {score}",
+    "twoPlayerNoData": "You and {name} never got to compare answers",
+    "noSharedData": "No shared questions with {name}",
+    "lastPlaceHint": "There's room to grow with {name}",
+    "rankRow": "{rank}. {name} — {score}",
+    "mutualFirst": "It's Mutual!",
+    "oneSided": "One-Sided",
+    "seeResults": "See results",
+    "playAgain": "Play again",
+    "waitingPlayAgain": "Waiting for the host to start a new game…",
+    "groupScoreLabel": "Click Score",
+    "titles": {
+      "soulmates": "Soulmates",
+      "oldFriends": "Ride or Die",
+      "justFriends": "Just Friends",
+      "parallelUniverses": "Parallel Universes"
+    },
+    "awards": {
+      "bestMatch": "Best Match",
+      "parallelLines": "Parallel Lines",
+      "soleOutlier": "The Odd One Out",
+      "voiceOfPeople": "Voice of the People",
+      "timesSuffix": " ({count} times)"
+    }
+  },
   "errors": {
     "nameRequired": "Please enter your name",
     "nameTooLong": "Names can be up to {max} characters",

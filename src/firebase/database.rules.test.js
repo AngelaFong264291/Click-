@@ -166,6 +166,158 @@ describe('Realtime Database room rules', () => {
     ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
   })
 
+  it('allows the host to save results once when finishing the game', async () => {
+    const room = lobbyRoom()
+    room.status = 'playing'
+    room.current = 9
+    room.phase = 'reveal'
+    room.deadline = Date.now() - 1000
+    room.questions = questions
+    await seedRoom(room)
+    const database = testEnv.authenticatedContext(HOST_UID).database()
+    const results = {
+      groupScore: 75,
+      groupTitle: 'oldFriends',
+      pairScores: { [`${HOST_UID}_${PLAYER_UID}`]: 75 },
+      awards: {},
+    }
+
+    await expect(
+      update(ref(database, ROOM_PATH), { status: 'finished', results }),
+    ).resolves.toBeUndefined()
+    await expect(
+      update(ref(database, ROOM_PATH), { results }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+  })
+
+  it('rejects a non-host saving results', async () => {
+    const room = lobbyRoom()
+    room.status = 'playing'
+    room.current = 9
+    room.phase = 'reveal'
+    room.questions = questions
+    await seedRoom(room)
+    const database = testEnv.authenticatedContext(PLAYER_UID).database()
+
+    await expect(
+      update(ref(database, ROOM_PATH), { status: 'finished', results: { groupScore: 75 } }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+  })
+
+  it('rejects an unknown field in results', async () => {
+    const room = lobbyRoom()
+    room.status = 'playing'
+    room.current = 9
+    room.phase = 'reveal'
+    room.questions = questions
+    await seedRoom(room)
+    const database = testEnv.authenticatedContext(HOST_UID).database()
+
+    await expect(
+      update(ref(database, ROOM_PATH), { status: 'finished', results: { groupScore: 75, extra: true } }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+  })
+
+  it('play again: host can clear game state back to the lobby', async () => {
+    const room = lobbyRoom()
+    room.status = 'finished'
+    room.current = 9
+    room.phase = 'reveal'
+    room.deadline = Date.now() - 1000
+    room.questions = questions
+    room.answers = { 0: { [HOST_UID]: { value: questions[0].options[0].id, ms: 100 } } }
+    room.scores = { 0: { score: 100 } }
+    room.results = { groupScore: 100 }
+    await seedRoom(room)
+    const database = testEnv.authenticatedContext(HOST_UID).database()
+
+    await expect(
+      update(ref(database, ROOM_PATH), {
+        status: 'lobby',
+        current: null,
+        phase: null,
+        deadline: null,
+        questions: null,
+        answers: null,
+        scores: null,
+        results: null,
+      }),
+    ).resolves.toBeUndefined()
+  })
+
+  it('rejects the host deleting scores/answers via the parent path mid-game', async () => {
+    const room = lobbyRoom()
+    room.status = 'playing'
+    room.current = 0
+    room.phase = 'answering'
+    room.deadline = Date.now() + 10_000
+    room.questions = questions
+    room.answers = { 0: { [HOST_UID]: { value: questions[0].options[0].id, ms: 100 } } }
+    room.scores = { 0: { score: 75 } }
+    await seedRoom(room)
+    const database = testEnv.authenticatedContext(HOST_UID).database()
+
+    await expect(
+      update(ref(database, ROOM_PATH), { scores: null }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+    await expect(
+      update(ref(database, ROOM_PATH), { answers: null }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+  })
+
+  it('rejects the host writing non-null data to scores/answers via the parent path, even when finished', async () => {
+    const room = lobbyRoom()
+    room.status = 'finished'
+    room.current = 9
+    room.phase = 'reveal'
+    room.questions = questions
+    await seedRoom(room)
+    const database = testEnv.authenticatedContext(HOST_UID).database()
+
+    await expect(
+      update(ref(database, ROOM_PATH), { scores: { 0: { score: 50 } } }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+    await expect(
+      update(ref(database, ROOM_PATH), {
+        answers: { 0: { [HOST_UID]: { value: questions[0].options[0].id, ms: 100 } } },
+      }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+  })
+
+  it('rejects a non-host deleting scores/answers via the parent path, even when finished', async () => {
+    const room = lobbyRoom()
+    room.status = 'finished'
+    room.current = 9
+    room.phase = 'reveal'
+    room.questions = questions
+    room.answers = { 0: { [HOST_UID]: { value: questions[0].options[0].id, ms: 100 } } }
+    room.scores = { 0: { score: 100 } }
+    await seedRoom(room)
+    const database = testEnv.authenticatedContext(PLAYER_UID).database()
+
+    await expect(
+      update(ref(database, ROOM_PATH), { scores: null }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+    await expect(
+      update(ref(database, ROOM_PATH), { answers: null }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+  })
+
+  it('play again: a non-host cannot clear game state', async () => {
+    const room = lobbyRoom()
+    room.status = 'finished'
+    room.current = 9
+    room.phase = 'reveal'
+    room.questions = questions
+    room.scores = { 0: { score: 100 } }
+    await seedRoom(room)
+    const database = testEnv.authenticatedContext(PLAYER_UID).database()
+
+    await expect(
+      update(ref(database, ROOM_PATH), { status: 'lobby', questions: null, scores: null }),
+    ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' })
+  })
+
   it('rejects malformed or out-of-range answers', async () => {
     const room = lobbyRoom()
     room.status = 'playing'

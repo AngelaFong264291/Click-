@@ -1,4 +1,5 @@
 // 房間規則嘅純函數：唔依賴 Firebase 或 React。
+import { onlinePlayerUids } from './flow.js'
 
 export const MIN_PLAYERS = 2
 export const MAX_PLAYERS = 6
@@ -87,8 +88,12 @@ export function shouldClaimHost(room, uid) {
   return hostIsGone(room) && pickNextHost(room.players, room.host) === uid
 }
 
+/** 得返喺線又未離開嘅玩家先計入開始人數（Play again 之後舊局嘅離線玩家唔計）。 */
 export function canStart(room, uid) {
   return Boolean(
-    room && room.host === uid && room.status === 'lobby' && playerCount(room) >= MIN_PLAYERS,
+    room &&
+      room.host === uid &&
+      room.status === 'lobby' &&
+      onlinePlayerUids(room.players).length >= MIN_PLAYERS,
   )
 }

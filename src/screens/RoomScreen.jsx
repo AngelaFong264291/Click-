@@ -8,8 +8,7 @@ import { useRoom } from '../firebase/useRoom.js'
 import { useLanguage } from '../i18n/useLanguage.js'
 import { errorMessage } from './errorMessage.js'
 import LobbyScreen from './LobbyScreen.jsx'
-import PlayingPlaceholder from './PlayingPlaceholder.jsx'
-import FinishedPlaceholder from './FinishedPlaceholder.jsx'
+import ResultsScreen from './ResultsScreen.jsx'
 import GameScreen from './GameScreen.jsx'
 import { loadSavedName, saveName } from './savedName.js'
 
@@ -44,9 +43,8 @@ function Room({ code }) {
     }
   }
 
-  if (room.status === 'playing') return <PlayingPlaceholder room={room} />
-    if (room.status === 'playing') return <GameScreen code={code} room={room} uid={uid} onLeave={handleLeave} />
-    if (room.status === 'finished') return <FinishedPlaceholder onLeave={handleLeave} />
+  if (room.status === 'playing') return <GameScreen code={code} room={room} uid={uid} onLeave={handleLeave} />
+  if (room.status === 'finished') return <ResultsScreen code={code} room={room} uid={uid} onLeave={handleLeave} />
   return <LobbyScreen code={code} room={room} uid={uid} onLeave={handleLeave} />
 }
 

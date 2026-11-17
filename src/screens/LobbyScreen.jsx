@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { onlinePlayerUids } from '../game/flow.js'
 import { MAX_PLAYERS, MIN_PLAYERS, canStart, sortedPlayers } from '../game/room.js'
 import { startGame } from '../firebase/rooms.js'
 import { useLanguage } from '../i18n/useLanguage.js'
@@ -16,11 +17,13 @@ export default function LobbyScreen({ code, room, uid, onLeave }) {
   const [error, setError] = useState(null)
   const [starting, setStarting] = useState(false)
 
+  const onlineUids = onlinePlayerUids(room.players)
+
   async function handleStart() {
     setStarting(true)
     setError(null)
     try {
-      await startGame(code, players.map((player) => player.uid))
+      await startGame(code, onlineUids)
     } catch (error) {
       console.error('[LobbyScreen] Start failed', {
         code: error?.code ?? error?.name,
@@ -61,7 +64,7 @@ export default function LobbyScreen({ code, room, uid, onLeave }) {
           >
             {t('room.start')}
           </button>
-          {players.length < MIN_PLAYERS && <p className="hint">{t('room.needMore', { min: MIN_PLAYERS })}</p>}
+          {onlineUids.length < MIN_PLAYERS && <p className="hint">{t('room.needMore', { min: MIN_PLAYERS })}</p>}
         </>
       ) : (
         <p className="hint">{t('room.waitingHost')}</p>
